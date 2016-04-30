@@ -1,7 +1,10 @@
 #include <iostream>
+#include "Conscientia.h"
 using namespace std;
 
+
 int main(){
-  cout << "Hello World!!\n";
+  Conscientia::initilizeNcurses();
+  while(1);
   return(1);
 }
