@@ -12,4 +12,6 @@ namespace Conscientia
   void setCursor(bool setting);
   void setEcho(bool setting);
   void setRaw(bool setting);
+  /*Windows*/
+  void newWindow(int sizeX, int sizeY, int posX, int posY, bool border);
 }
