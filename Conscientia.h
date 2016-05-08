@@ -19,7 +19,7 @@ namespace Conscientia
   /*=====>>>>>-----Run Time-----<<<<<=====*/
   /*>>>>>-----WINDOW-----<<<<<*/
   /*>>>>>-----Initilization-----<<<<<*/
-  void createWindow(string name, int posX, int posY, int sizeX, int sizeY);
+  void createWindow(string name, int posX, int posY, int sizeX, int sizeY, bool border);
   /*>>>>>-----Management-----<<<<<*/
   void drawAllBorders();
   void drawBorder(int pointer);
@@ -58,4 +58,4 @@ namespace Conscientia
   void updateWindow(int pointer);
   /*=====>>>>>-----Termination-----<<<<<=====*/
   void terminateConscientia();
-}
+};

@@ -242,4 +242,4 @@ namespace Conscientia
   void terminateConscientia(){
     endwin();
   }
-}
+};
