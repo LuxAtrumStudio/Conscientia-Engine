@@ -26,6 +26,8 @@ namespace Conscientia
   void clearAllWindows();
   void clearWindow(int pointer);
   int findWindowPointer(string name);
+  void setWindowColor(int pointer, int text, int background);
+  void clearWindowColor(int pointer);
   /*>>>>>-----Termination-----<<<<<*/
   void terminateAllWindows();
   void terminateWindow(int pointer);
@@ -44,12 +46,6 @@ namespace Conscientia
   void mprint(int pointer, int x, int y, string str);
   void cmprint(int x, int y, string str);
   void fmprint(string name, int x, int y, string str);
-  void printc(int pointer, string str, int text, int background);
-  void cprintc(string str, int text, int background);
-  void fprintc(string name, string str, int text, int background);
-  void mprintc(int pointer, int x, int y, string str, int text, int background);
-  void cmprintc(int x, int y, string str, int text, int background);
-  void fmprintc(string name, int x, int y, string str, int text, int background);
   /*>>>>>-----SYSTEM-----<<<<<*/
   /*>>>>>-----Update-----<<<<<*/
   void update();

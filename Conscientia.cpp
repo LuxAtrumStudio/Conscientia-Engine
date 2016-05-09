@@ -11,6 +11,7 @@ struct window {
   WINDOW * pointer;
   int posX, posY, sizeX, sizeY;
   int cursorX, cursorY;
+  int colorPointer;
   bool border;
 };
 vector<window> windows;
@@ -119,6 +120,12 @@ namespace Conscientia
     }
     return(0);
   }
+  void setWindowColor(int pointer, int text, int background){
+
+  }
+  void clearWindowColor(int pointer){
+
+  }
   /*>>>>>-----Termination-----<<<<<*/
   void terminateAllWindows(){
     for(unsigned a = 0; a < windows.size(); a++){
@@ -205,24 +212,6 @@ namespace Conscientia
   void fmprint(string name, int x, int y, string str){
     int pointer = findWindowPointer(name);
     mprint(pointer, x, y, str);
-  }
-  void printc(int pointer, string str, int text, int background){
-
-  }
-  void cprintc(string str, int text, int background){
-
-  }
-  void fprintc(string name, string str, int text, int background){
-
-  }
-  void mprintc(int pointer, int x, int y, string str, int text, int background){
-
-  }
-  void cmprintc(int x, int y, string str, int text, int background){
-
-  }
-  void fmprintc(string name, int x, int y, string str, int text, int background){
-
   }
   /*>>>>>-----SYSTEM-----<<<<<*/
   /*>>>>>-----Update-----<<<<<*/
