@@ -21,14 +21,16 @@ namespace Conscientia {
 	/*=====>>>>>-----Run Time-----<<<<<=====*/
 	/*>>>>>-----WINDOW-----<<<<<*/
 	/*>>>>>-----Initilization-----<<<<<*/
-	void createWindow(string name, int posX, int posY, int sizeX, int sizeY, bool border);
+	void createWindow(string name, int posX, int posY, int sizeX, int sizeY, bool border, bool title);
 	/*>>>>>-----Management-----<<<<<*/
 	void setBorder(int pointer, bool setting);
 	void clearAllWindows();
 	void clearWindow(int pointer);
 	int findWindowPointer(string name);
+	void setWindowTitle(int pointer, bool setting);
+	void drawTitle(int pointer);
 	/*-----WINDOWS-----*/
-	void drawBorder(int pointer, bool setting);
+	void drawBorder(int pointer);
 	/*>>>>>-----Termination-----<<<<<*/
 	void terminateAllWindows();
 	void terminateWindow(int pointer);
@@ -56,9 +58,6 @@ namespace Conscientia {
 	/*>>>>>-----SYSTEM-----<<<<<*/
 	/*>>>>>-----Update-----<<<<<*/
 	void update();
-	/*-----NCURSES-----*/
-	void updateAllWindows();
-	void updateWindow(int pointer);
 	/*=====>>>>>-----Termination-----<<<<<=====*/
 	void terminateConscientia();
 }
