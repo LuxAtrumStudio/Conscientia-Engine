@@ -300,6 +300,9 @@ namespace Conscientia {
 				}
 			}
 		}
+		if (autoRefresh == true) {
+			update();
+		}
 	}
 	void cprint(string str) {
 	}
@@ -322,6 +325,12 @@ namespace Conscientia {
 	void cmprintc(int x, int y, string str, int text, int background) {
 	}
 	void fmprintc(string name, int x, int y, string str, int text, int background) {
+	}
+	/*-----SETTINGS-----*/
+	void setOutputAttribues(WORD attributes, int length, int x, int y) {
+		COORD pos = { x, y };
+		LPDWORD lpNumberofAttrsWritten = 0;
+		WriteConsoleOutputAttribute(displayBuffer, &attributes, length, pos, lpNumberofAttrsWritten);
 	}
 	/*>>>>>-----SYSTEM-----<<<<<*/
 	/*>>>>>-----Update-----<<<<<*/

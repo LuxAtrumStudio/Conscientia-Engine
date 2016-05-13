@@ -55,6 +55,8 @@ namespace Conscientia {
 	void mprintc(int pointer, int x, int y, string str, int text, int background);
 	void cmprintc(int x, int y, string str, int text, int background);
 	void fmprintc(string name, int x, int y, string str, int text, int background);
+	/*-----SETTINGS-----*/
+	void setOutputAttribues(WORD attributes, int length, int x, int y);
 	/*>>>>>-----SYSTEM-----<<<<<*/
 	/*>>>>>-----Update-----<<<<<*/
 	void update();
