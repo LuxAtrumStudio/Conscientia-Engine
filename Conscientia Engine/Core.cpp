@@ -2,8 +2,6 @@
 #include "Conscientia.h"
 using namespace std;
 
-/*=====>>>>>-----TEXT-----<<<<<=====*/
-
 int main() {
 	CONSCIENTIA::initilizeConscientia();
 
