@@ -5,6 +5,7 @@
 #include <vector>
 #include <fstream>
 #include <ctime>
+#include <conio.h>
 #include "Conscientia.h"
 /*=====>>>>>-----DATA-----<<<<<=====*/
 /*=====>>>>>-----Global-----<<<<<=====*/
@@ -25,6 +26,7 @@ namespace Conscientia {
 	/*=====>>>>>-----FUNCTIONS-----<<<<<=====*/
 	/*=====>>>>>-----Initilization-----<<<<<=====*/
 	void initilizeConscientia() {
+		autoRefresh = false;
 		loadBuffer = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE, 0, NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
 		displayBuffer = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE, 0, NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
 		SetConsoleActiveScreenBuffer(displayBuffer);
@@ -45,22 +47,10 @@ namespace Conscientia {
 	}
 	void advancedInit(bool cursor, bool echo, bool raw) {
 		initilizeConscientia();
-		Conscientia::setCursor(cursor);
-		Conscientia::setEcho(echo);
-		Conscientia::setRaw(raw);
 	}
 	/*>>>>>-----SETTINGS-----<<<<<*/
 	void setAutoRefresh(bool setting) {
 		autoRefresh = setting;
-	}
-	/*>>>>>-----NCURSES INITILIZATION-----<<<<<*/
-	void initilizeColors() {
-	}
-	void setCursor(bool setting) {
-	}
-	void setEcho(bool setting) {
-	}
-	void setRaw(bool setting) {
 	}
 	/*=====>>>>>-----Run Time-----<<<<<=====*/
 	/*>>>>>-----WINDOW-----<<<<<*/
@@ -94,15 +84,24 @@ namespace Conscientia {
 		}
 	}
 	/*>>>>>-----Management-----<<<<<*/
+	void clearAllWindows() {
+		for (unsigned a = 0; a < windows.size(); a++) {
+			clearWindow(a);
+		}
+	}
+	int findWindowPointer(string name) {
+		for (unsigned a = 0; a < windows.size(); a++) {
+			if (windows[a].name == name) {
+				return(a);
+			}
+		}
+		return(0);
+	}
+	/*-----POINTER-----*/
 	void setBorder(int pointer, bool setting) {
 		if (windows[pointer].border != setting) {
 			windows[pointer].border = setting;
 			drawBorder(pointer);
-		}
-	}
-	void clearAllWindows() {
-		for (unsigned a = 0; a < windows.size(); a++) {
-			clearWindow(a);
 		}
 	}
 	void clearWindow(int pointer) {
@@ -130,29 +129,37 @@ namespace Conscientia {
 			}
 		}
 	}
-	int findWindowPointer(string name) {
-		for (unsigned a = 0; a < windows.size(); a++) {
-			if (windows[a].name == name) {
-				return(a);
-			}
-		}
-		return(0);
-	}
 	void setWindowTitle(int pointer, bool setting) {
 		if (windows[pointer].title != setting) {
 			windows[pointer].title = setting;
 			drawTitle(pointer);
 		}
 	}
-	void drawTitle(int pointer) {
-		int titleSize = windows[pointer].name.size();
-		int windowSize = windows[pointer].sizeX;
-		windowSize = windowSize / 2;
-		titleSize = titleSize / 2;
-		COORD pos = { (windowSize - titleSize) + windows[pointer].startX, windows[pointer].startY };
-		DWORD dwBytesWritten;
-		string title = windows[pointer].name;
-		WriteConsoleOutputCharacter(loadBuffer, title.c_str(), title.size(), pos, &dwBytesWritten);
+	void setCurrentWindow(int pointer) {
+		currentWindowPointer = pointer;
+	}
+	/*-----CURRENT-----*/
+	void csetBorder(bool setting) {
+		setBorder(currentWindowPointer, setting);
+	}
+	void cclearWindow() {
+		clearWindow(currentWindowPointer);
+	}
+	void csetWindowTitle(bool setting) {
+		setWindowTitle(currentWindowPointer, setting);
+	}
+	/*-----FIND-----*/
+	void fsetBorder(string name, bool setting) {
+		setBorder(findWindowPointer(name), setting);
+	}
+	void fclearWindow(string name) {
+		clearWindow(findWindowPointer(name));
+	}
+	void fsetWindowTitle(string name, bool setting) {
+		setWindowTitle(findWindowPointer(name), setting);
+	}
+	void fsetCurrentWindow(string name) {
+		currentWindowPointer = findWindowPointer(name);
 	}
 	/*-----WINDOWS-----*/
 	void drawBorder(int pointer) {
@@ -216,6 +223,16 @@ namespace Conscientia {
 		pos4 = { (short)windows[pointer].endX - 1, (short)windows[pointer].endY - 1 };
 		WriteConsoleOutputCharacter(loadBuffer, character4.c_str(), character4.size(), pos4, &dwBytesWritten4);
 	}
+	void drawTitle(int pointer) {
+		int titleSize = windows[pointer].name.size();
+		int windowSize = windows[pointer].sizeX;
+		windowSize = windowSize / 2;
+		titleSize = titleSize / 2;
+		COORD pos = { (windowSize - titleSize) + windows[pointer].startX, windows[pointer].startY };
+		DWORD dwBytesWritten;
+		string title = windows[pointer].name;
+		WriteConsoleOutputCharacter(loadBuffer, title.c_str(), title.size(), pos, &dwBytesWritten);
+	}
 	/*>>>>>-----Termination-----<<<<<*/
 	void terminateAllWindows() {
 		for (unsigned a = 1; a < windows.size(); a++) {
@@ -232,24 +249,44 @@ namespace Conscientia {
 	/*>>>>>-----USER INTERFACE-----<<<<<*/
 	/*>>>>>-----Input-----<<<<<*/
 	char gchar() {
-		return('a');
-	}
-	char cchar() {
-		return('a');
+		char in;
+		in = _getch();
+		return(in);
 	}
 	int gint() {
-		return(0);
+		int in;
+		in = _getch();
+		return(in);
 	}
 	int cint() {
-		return(0);
+		int in = 0;
+		int rawin = 0;
+		while (rawin != 13) {
+			rawin = _getch();
+			in = (in * 10) + rawin;
+		}
+		return(in);
 	}
 	string cstr() {
-		return("a");
+		string in;
+		char inch;
+		int rawint = 0;
+		while (rawint != 13) {
+			rawint = _getch();
+			inch = char(rawint);
+			in = in + inch;
+		}
+		return(in);
 	}
 	float gfloat() {
-		return(0.0f);
+		string rawstr = cstr();
+		string::size_type sz;
+		float in;
+		in = stof(rawstr, &sz);
+		return(in);
 	}
 	/*>>>>>-----Output-----<<<<<*/
+	/*-----POINTER-----*/
 	void print(int pointer, string str) {
 		for (int a = 0; a < str.size(); a++) {
 			if (str[a] == '/') {
@@ -304,33 +341,24 @@ namespace Conscientia {
 			update();
 		}
 	}
-	void cprint(string str) {
-	}
-	void fprint(string name, string str) {
-	}
 	void mprint(int pointer, int x, int y, string str) {
+		windows[pointer].cursorX = x;
+		windows[pointer].cursorY = y;
+		print(pointer, str);
+	}
+	/*-----CURRENT-----*/
+	void cprint(string str) {
+		print(currentWindowPointer, str);
 	}
 	void cmprint(int x, int y, string str) {
+		mprint(currentWindowPointer, x, y, str);
+	}
+	/*-----FIND-----*/
+	void fprint(string name, string str) {
+		print(findWindowPointer(name), str);
 	}
 	void fmprint(string name, int x, int y, string str) {
-	}
-	void printc(int pointer, string str, int text, int background) {
-	}
-	void cprintc(string str, int text, int background) {
-	}
-	void fprintc(string name, string str, int text, int background) {
-	}
-	void mprintc(int pointer, int x, int y, string str, int text, int background) {
-	}
-	void cmprintc(int x, int y, string str, int text, int background) {
-	}
-	void fmprintc(string name, int x, int y, string str, int text, int background) {
-	}
-	/*-----SETTINGS-----*/
-	void setOutputAttribues(WORD attributes, int length, int x, int y) {
-		COORD pos = { x, y };
-		LPDWORD lpNumberofAttrsWritten = 0;
-		WriteConsoleOutputAttribute(displayBuffer, &attributes, length, pos, lpNumberofAttrsWritten);
+		mprint(findWindowPointer(name), x, y, str);
 	}
 	/*>>>>>-----SYSTEM-----<<<<<*/
 	/*>>>>>-----Update-----<<<<<*/

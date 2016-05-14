@@ -13,50 +13,50 @@ namespace Conscientia {
 	void advancedInit(bool cursor, bool echo, bool raw);
 	/*>>>>>-----SETTINGS-----<<<<<*/
 	void setAutoRefresh(bool setting);
-	/*>>>>>-----NCURSES INITILIZATION-----<<<<<*/
-	void initilizeColors();
-	void setCursor(bool setting);
-	void setEcho(bool setting);
-	void setRaw(bool setting);
 	/*=====>>>>>-----Run Time-----<<<<<=====*/
 	/*>>>>>-----WINDOW-----<<<<<*/
 	/*>>>>>-----Initilization-----<<<<<*/
 	void createWindow(string name, int posX, int posY, int sizeX, int sizeY, bool border, bool title);
 	/*>>>>>-----Management-----<<<<<*/
-	void setBorder(int pointer, bool setting);
 	void clearAllWindows();
-	void clearWindow(int pointer);
 	int findWindowPointer(string name);
+	/*-----POINTER-----*/
+	void setBorder(int pointer, bool setting);
+	void clearWindow(int pointer);
 	void setWindowTitle(int pointer, bool setting);
-	void drawTitle(int pointer);
+	void setCurrentWindow(int pointer);
+	/*-----CURRENT-----*/
+	void csetBorder(bool setting);
+	void cclearWindow();
+	void csetWindowTitle(bool setting);
+	/*-----FIND-----*/
+	void fsetBorder(string name, bool setting);
+	void fclearWindow(string name);
+	void fsetWindowTitle(string name, bool setting);
+	void fsetCurrentWindow(string name);
 	/*-----WINDOWS-----*/
 	void drawBorder(int pointer);
+	void drawTitle(int pointer);
 	/*>>>>>-----Termination-----<<<<<*/
 	void terminateAllWindows();
 	void terminateWindow(int pointer);
 	/*>>>>>-----USER INTERFACE-----<<<<<*/
 	/*>>>>>-----Input-----<<<<<*/
 	char gchar();
-	char cchar();
 	int gint();
 	int cint();
 	string cstr();
 	float gfloat();
 	/*>>>>>-----Output-----<<<<<*/
+	/*-----POINTER-----*/
 	void print(int pointer, string str);
-	void cprint(string str);
-	void fprint(string name, string str);
 	void mprint(int pointer, int x, int y, string str);
+	/*-----CURRENT-----*/
+	void cprint(string str);
 	void cmprint(int x, int y, string str);
+	/*-----FIND-----*/
+	void fprint(string name, string str);
 	void fmprint(string name, int x, int y, string str);
-	void printc(int pointer, string str, int text, int background);
-	void cprintc(string str, int text, int background);
-	void fprintc(string name, string str, int text, int background);
-	void mprintc(int pointer, int x, int y, string str, int text, int background);
-	void cmprintc(int x, int y, string str, int text, int background);
-	void fmprintc(string name, int x, int y, string str, int text, int background);
-	/*-----SETTINGS-----*/
-	void setOutputAttribues(WORD attributes, int length, int x, int y);
 	/*>>>>>-----SYSTEM-----<<<<<*/
 	/*>>>>>-----Update-----<<<<<*/
 	void update();
