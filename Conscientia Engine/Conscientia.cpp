@@ -7,7 +7,7 @@
 #include <ctime>
 #include <conio.h>
 #include "Conscientia.h"
-/*=====>>>>>-----DATA-----<<<<<=====*/
+/*=====>>>>>-----BASIC DATA-----<<<<<=====*/
 /*=====>>>>>-----Global-----<<<<<=====*/
 struct window {
 	string name;
@@ -21,6 +21,12 @@ bool autoRefresh = false;
 /*=====>>>>>-----Windows-----<<<<<=====*/
 HANDLE loadBuffer, displayBuffer;
 _CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
+
+/*=====>>>>>-----ADVANCED DATA-----<<<<<=====*/
+/*=====>>>>>-----Global-----<<<<<=====*/
+/*>>>>>-----SYSTEM MEMORY-----<<<<<*/
+/*>>>>>-----Vectors-----<<<<<*/
+vector<int> loadingBarPointers;
 
 namespace CONSCIENTIA {
 	/*=====>>>>>-----FUNCTIONS-----<<<<<=====*/
@@ -105,28 +111,40 @@ namespace CONSCIENTIA {
 		}
 	}
 	void clearWindow(int pointer) {
+		string clear = "";
+		int charCount, x, y;
 		windows[pointer].cursorX = 0;
 		windows[pointer].cursorY = 0;
-		if (windows[pointer].border == true) {
-			windows[pointer].cursorX++;
+		if (windows[pointer].border == true || windows[pointer].title == true) {
 			windows[pointer].cursorY++;
 		}
-		string blank = "";
-		if (windows[pointer].border == false) {
-			for (int a = 0; a < windows[pointer].sizeX; a++) {
-				blank = blank + " ";
-			}
-			for (int a = 0; a < windows[pointer].sizeY; a++) {
-				print(pointer, blank);
-			}
+		if (windows[pointer].border == true) {
+			windows[pointer].cursorX++;
 		}
-		else if (windows[pointer].border == true) {
-			for (int a = 0; a < windows[pointer].sizeX - 1; a++) {
-				blank = blank + " ";
-			}
-			for (int a = 0; a < windows[pointer].sizeY - 1; a++) {
-				print(pointer, blank);
-			}
+		x = windows[pointer].sizeX;
+		y = windows[pointer].sizeY;
+		if (windows[pointer].border == true) {
+			x -= 2;
+			y -= 2;
+		}
+		if (windows[pointer].title == true && windows[pointer].border == false) {
+			x--;
+		}
+		charCount = x;
+		for (int a = 0; a < charCount; a++) {
+			clear = clear + char(0);
+		}
+		for (int a = 0; a < y; a++) {
+			print(pointer, clear);
+		}
+		clear = "";
+		windows[pointer].cursorX = 0;
+		windows[pointer].cursorY = 0;
+		if (windows[pointer].border == true || windows[pointer].title == true) {
+			windows[pointer].cursorY++;
+		}
+		if (windows[pointer].border == true) {
+			windows[pointer].cursorX++;
 		}
 	}
 	void setWindowTitle(int pointer, bool setting) {
@@ -304,14 +322,6 @@ namespace CONSCIENTIA {
 				}
 			}
 			else if (str[a] != '/') {
-				string character;
-				stringstream sstream;
-				sstream << str[a];
-				sstream >> character;
-				COORD pos = { windows[pointer].cursorX + windows[pointer].startX, windows[pointer].cursorY + windows[pointer].startY };
-				DWORD dwBytesWritten = 0;
-				WriteConsoleOutputCharacter(loadBuffer, character.c_str(), character.size(), pos, &dwBytesWritten);
-				windows[pointer].cursorX++;
 				if (windows[pointer].border == false) {
 					if (windows[pointer].cursorX >= windows[pointer].sizeX) {
 						windows[pointer].cursorX = 0;
@@ -335,6 +345,14 @@ namespace CONSCIENTIA {
 						}
 					}
 				}
+				string character;
+				stringstream sstream;
+				sstream << str[a];
+				sstream >> character;
+				COORD pos = { windows[pointer].cursorX + windows[pointer].startX, windows[pointer].cursorY + windows[pointer].startY };
+				DWORD dwBytesWritten = 0;
+				WriteConsoleOutputCharacter(loadBuffer, character.c_str(), character.size(), pos, &dwBytesWritten);
+				windows[pointer].cursorX++;
 			}
 		}
 		if (autoRefresh == true) {
@@ -369,4 +387,37 @@ namespace CONSCIENTIA {
 	/*=====>>>>>-----Termination-----<<<<<=====*/
 	void terminateConscientia() {
 	}
+
+	/*=====>>>>>-----ADVANCED FUNCITONS-----<<<<<=====*/
+	/*=====>>>>>-----Output Funcitons-----<<<<<=====*/
+	/*>>>>>-----INTERACTIVE-----<<<<<*/
+	string conscientiaMenu(string menuFileDirectory) {
+		return("");
+	}
+	/*>>>>>-----DISPLAY-----<<<<<*/
+	/*>>>>>-----Loading Bars-----<<<<<*/
+	int initilizeLoadingBar(string process) {
+		loadingBarPointers.push_back(windows.size());
+		createWindow(process, (windows[0].sizeX / 2) - (windows[0].sizeX / 4), (windows[0].sizeY / 2) - 1, (windows[0].sizeX / 2), 3, true, true);
+		return(loadingBarPointers.size() - 1);
+	}
+	void loadingBar(int index, double percent) {
+		char block = char(219);
+		int loadingBarPointer = loadingBarPointers[index];
+		int size = windows[loadingBarPointer].sizeX - 2;
+		double blockWorth = (double)100 / (double)size;
+		//clearWindow(loadingBarPointer);
+		string bar = "";
+		while (percent > blockWorth) {
+			bar = bar + block;
+			percent = percent - blockWorth;
+		}
+		print(loadingBarPointer, bar);
+	}
+	void terminateLoadingBar(int index) {
+		terminateWindow(loadingBarPointers[index]);
+		loadingBarPointers.erase(loadingBarPointers.begin() + index);
+	}
+	/*=====>>>>>-----Input Funcitons-----<<<<<=====*/
+	/*=====>>>>>-----System Funcitons-----<<<<<=====*/
 }

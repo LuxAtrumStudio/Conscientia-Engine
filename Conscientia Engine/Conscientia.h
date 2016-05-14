@@ -64,5 +64,14 @@ namespace CONSCIENTIA {
 	void terminateConscientia();
 
 	/*=====>>>>>-----ADVANCED FUNCITONS-----<<<<<=====*/
+	/*=====>>>>>-----Output Funcitons-----<<<<<=====*/
+	/*>>>>>-----INTERACTIVE-----<<<<<*/
 	string conscientiaMenu(string menuFileDirectory);
+	/*>>>>>-----DISPLAY-----<<<<<*/
+	/*>>>>>-----Loading Bars-----<<<<<*/
+	int initilizeLoadingBar(string process);
+	void loadingBar(int index, double percent);
+	void terminateLoadingBar(int index);
+	/*=====>>>>>-----Input Funcitons-----<<<<<=====*/
+	/*=====>>>>>-----System Funcitons-----<<<<<=====*/
 }
