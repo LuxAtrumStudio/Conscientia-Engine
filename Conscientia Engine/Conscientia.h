@@ -6,7 +6,7 @@
 #include <ctime>
 using namespace std;
 
-namespace Conscientia {
+namespace CONSCIENTIA {
 	/*=====>>>>>-----FUNCTIONS-----<<<<<=====*/
 	/*=====>>>>>-----Initilization-----<<<<<=====*/
 	void initilizeConscientia();

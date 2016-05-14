@@ -22,7 +22,7 @@ bool autoRefresh = false;
 HANDLE loadBuffer, displayBuffer;
 _CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
 
-namespace Conscientia {
+namespace CONSCIENTIA {
 	/*=====>>>>>-----FUNCTIONS-----<<<<<=====*/
 	/*=====>>>>>-----Initilization-----<<<<<=====*/
 	void initilizeConscientia() {
