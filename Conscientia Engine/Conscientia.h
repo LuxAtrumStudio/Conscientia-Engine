@@ -7,7 +7,7 @@
 using namespace std;
 
 namespace CONSCIENTIA {
-	/*=====>>>>>-----FUNCTIONS-----<<<<<=====*/
+	/*=====>>>>>-----CORE FUNCTIONS-----<<<<<=====*/
 	/*=====>>>>>-----Initilization-----<<<<<=====*/
 	void initilizeConscientia();
 	void advancedInit(bool cursor, bool echo, bool raw);
@@ -62,4 +62,7 @@ namespace CONSCIENTIA {
 	void update();
 	/*=====>>>>>-----Termination-----<<<<<=====*/
 	void terminateConscientia();
+
+	/*=====>>>>>-----ADVANCED FUNCITONS-----<<<<<=====*/
+	string conscientiaMenu(string menuFileDirectory);
 }
