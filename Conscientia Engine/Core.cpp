@@ -5,8 +5,8 @@ using namespace std;
 /*=====>>>>>-----TEXT-----<<<<<=====*/
 
 int main() {
-	Conscientia::initilizeConscientia();
+	CONSCIENTIA::initilizeConscientia();
 
-	Conscientia::terminateConscientia();
+	CONSCIENTIA::terminateConscientia();
 	return(1);
 }
