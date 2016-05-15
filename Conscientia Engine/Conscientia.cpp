@@ -261,6 +261,9 @@ namespace CONSCIENTIA {
 		if (windows[pointer].border == true) {
 			setBorder(pointer, false);
 		}
+		if (windows[pointer].title == true) {
+			setWindowTitle(pointer, false);
+		}
 		clearWindow(pointer);
 		windows.erase(windows.begin() + pointer);
 	}
@@ -406,7 +409,7 @@ namespace CONSCIENTIA {
 		int loadingBarPointer = loadingBarPointers[index];
 		int size = windows[loadingBarPointer].sizeX - 2;
 		double blockWorth = (double)100 / (double)size;
-		//clearWindow(loadingBarPointer);
+		clearWindow(loadingBarPointer);
 		string bar = "";
 		while (percent > blockWorth) {
 			bar = bar + block;
