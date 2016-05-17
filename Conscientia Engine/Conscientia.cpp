@@ -400,7 +400,14 @@ namespace CONSCIENTIA {
 	/*=====>>>>>-----Output Funcitons-----<<<<<=====*/
 	/*>>>>>-----INTERACTIVE-----<<<<<*/
 	/*>>>>>-----Menu-----<<<<<*/
-	string menu(string menuFileDirectory) {
+	string menu(string menuFileDirectory, int posX, int posY, int sizeX, int sizeY) {
+		menuHierarchy menu;
+		menu = loadMenuHierarchy(menuFileDirectory);
+		int windowPointer = windows.size();
+		int pageWidth, listWidth;
+		int currentPage = 0, currentList = 0, currentItem = 0;
+		createWindow(menu.name, posX, posY, sizeX, sizeY, true, true);
+		setCurrentWindow(windowPointer);
 		return("");
 	}
 	menuHierarchy loadMenuHierarchy(string menuFileDirectory) {
@@ -494,18 +501,28 @@ namespace CONSCIENTIA {
 				newList.items.push_back(currentLine);
 			}
 		}
-		print(1, "H:" + newHierarchy.name);
-		for (int a = 0; a < newHierarchy.pages.size(); a++) {
-			print(1, "P:" + newHierarchy.pages[a].name);
-			for (int b = 0; b < newHierarchy.pages[a].lists.size(); b++) {
-				print(1, "L:" + newHierarchy.pages[a].lists[b].name);
-				for (int c = 0; c < newHierarchy.pages[a].lists[b].items.size(); c++) {
-					print(1, "I:" + newHierarchy.pages[a].lists[b].items[c]);
-				}
-			}
-		}
-
 		return(newHierarchy);
+	}
+	void displayMenu(menuHierarchy menu, int x, int y, int z) {
+		int sizeX, sizeY;
+		sizeX = windows[currentWindowPointer].sizeX - 2;
+		sizeY = windows[currentWindowPointer].sizeY - 2;
+		int pageWidth, listWidth;
+		pageWidth = sizeX / menu.pages.size();
+		if (pageWidth < sizeX / 6) {
+			pageWidth = sizeX / 5;
+		}
+		listWidth = sizeX / menu.pages[z].lists.size();
+		if (listWidth < sizeX / 9) {
+			listWidth = sizeX / 8;
+		}
+	}
+	int findTextStart(string str, int space) {
+		space = space / 2;
+		int strSize = str.size();
+		strSize / 2;
+		int strStart = space - strSize;
+		return(strStart);
 	}
 	/*>>>>>-----DISPLAY-----<<<<<*/
 	/*>>>>>-----Loading Bars-----<<<<<*/
