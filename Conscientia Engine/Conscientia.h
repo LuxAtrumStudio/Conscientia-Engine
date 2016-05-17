@@ -5,11 +5,22 @@
 #include <fstream>
 #include <ctime>
 using namespace std;
-
+struct menuList {
+	string name;
+	vector<string> items;
+};
+struct menuPage {
+	string name;
+	vector<menuList> lists;
+};
+struct menuHierarchy {
+	string name;
+	vector<menuPage> pages;
+};
 namespace CONSCIENTIA {
 	/*=====>>>>>-----CORE FUNCTIONS-----<<<<<=====*/
 	/*=====>>>>>-----Initilization-----<<<<<=====*/
-	void initilizeConscientia();
+	void initializeConscientia();
 	void advancedInit(bool cursor, bool echo, bool raw);
 	/*>>>>>-----SETTINGS-----<<<<<*/
 	void setAutoRefresh(bool setting);
@@ -66,10 +77,12 @@ namespace CONSCIENTIA {
 	/*=====>>>>>-----ADVANCED FUNCITONS-----<<<<<=====*/
 	/*=====>>>>>-----Output Funcitons-----<<<<<=====*/
 	/*>>>>>-----INTERACTIVE-----<<<<<*/
-	string conscientiaMenu(string menuFileDirectory);
+	/*>>>>>-----Menu-----<<<<<*/
+	string menu(string menuFileDirectory);
+	menuHierarchy loadMenuHierarchy(string menuFileDirectory);
 	/*>>>>>-----DISPLAY-----<<<<<*/
 	/*>>>>>-----Loading Bars-----<<<<<*/
-	int initilizeLoadingBar(string process);
+	int initializeLoadingBar(string process);
 	void loadingBar(int index, double percent);
 	void terminateLoadingBar(int index);
 	/*=====>>>>>-----Input Funcitons-----<<<<<=====*/

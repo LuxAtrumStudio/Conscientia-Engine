@@ -24,14 +24,19 @@ _CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
 
 /*=====>>>>>-----ADVANCED DATA-----<<<<<=====*/
 /*=====>>>>>-----Global-----<<<<<=====*/
-/*>>>>>-----SYSTEM MEMORY-----<<<<<*/
-/*>>>>>-----Vectors-----<<<<<*/
+struct luxCode {
+	vector<string> lines;
+};
+/*>>>>>-----FUNCTIONS-----<<<<<*/
+/*>>>>>-----Menu-----<<<<<*/
+
+/*>>>>>-----Loading Bars-----<<<<<*/
 vector<int> loadingBarPointers;
 
 namespace CONSCIENTIA {
 	/*=====>>>>>-----FUNCTIONS-----<<<<<=====*/
 	/*=====>>>>>-----Initilization-----<<<<<=====*/
-	void initilizeConscientia() {
+	void initializeConscientia() {
 		autoRefresh = false;
 		loadBuffer = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE, 0, NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
 		displayBuffer = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE, 0, NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
@@ -52,7 +57,7 @@ namespace CONSCIENTIA {
 		windows.push_back(declaration);
 	}
 	void advancedInit(bool cursor, bool echo, bool raw) {
-		initilizeConscientia();
+		initializeConscientia();
 	}
 	/*>>>>>-----SETTINGS-----<<<<<*/
 	void setAutoRefresh(bool setting) {
@@ -394,12 +399,117 @@ namespace CONSCIENTIA {
 	/*=====>>>>>-----ADVANCED FUNCITONS-----<<<<<=====*/
 	/*=====>>>>>-----Output Funcitons-----<<<<<=====*/
 	/*>>>>>-----INTERACTIVE-----<<<<<*/
-	string conscientiaMenu(string menuFileDirectory) {
+	/*>>>>>-----Menu-----<<<<<*/
+	string menu(string menuFileDirectory) {
 		return("");
+	}
+	menuHierarchy loadMenuHierarchy(string menuFileDirectory) {
+		string line;
+		luxCode rawCode;
+		int lineCount = 0, totalLines;
+		int loadBar = -1;
+		ifstream load(menuFileDirectory.c_str());
+		if (load.is_open()) {
+			load >> lineCount;
+			totalLines = lineCount;
+			if (lineCount >= 50) {
+				loadBar = initializeLoadingBar("Loading Menu");
+			}
+			lineCount = 0;
+			getline(load, line);
+			while (getline(load, line)) {
+				rawCode.lines.push_back(line);
+				lineCount++;
+				if (loadBar != -1 && (lineCount % 10) == 0) {
+					loadingBar(loadBar, ((double)lineCount / (double)totalLines) * 100);
+				}
+			}
+			load.close();
+			if (loadBar != -1) {
+				terminateLoadingBar(loadBar);
+			}
+		}
+		string cleanLine;
+		bool tabSpace;
+		for (unsigned a = 0; a < rawCode.lines.size(); a++) {
+			line = rawCode.lines[a];
+			cleanLine = "";
+			tabSpace = true;
+			for (unsigned b = 0; b < line.size(); b++) {
+				if (tabSpace == true && line[b] != '	') {
+					tabSpace = false;
+				}
+				if (tabSpace == false) {
+					cleanLine = cleanLine + line[b];
+				}
+			}
+			rawCode.lines[a] = cleanLine;
+		}
+		menuHierarchy newHierarchy;
+		menuPage newPage;
+		menuList newList;
+		int currentLevel = 0;
+		string currentLine = "";
+		string codeLine = "";
+		for (unsigned a = 0; a < rawCode.lines.size(); a++) {
+			currentLine = rawCode.lines[a];
+			codeLine = "";
+			if (currentLine[0] == '[') {
+				for (unsigned b = 1; b < currentLine.size() && currentLine[b] != ']'; b++) {
+					codeLine = codeLine + currentLine[b];
+				}
+				if (currentLevel == 0) {
+				}
+				if (currentLevel == 1) {
+				}
+				if (currentLevel == 2) {
+				}
+			}
+			if (currentLine[currentLine.size() - 1] == '{') {
+				if (currentLevel == 0) {
+					newHierarchy.name = codeLine;
+				}
+				if (currentLevel == 1) {
+					newPage.lists.clear();
+					newPage.name = codeLine;
+				}
+				if (currentLevel == 2) {
+					newList.items.clear();
+					newList.name = codeLine;
+				}
+				currentLevel++;
+			}
+			if (currentLine[currentLine.size() - 1] == '}') {
+				currentLevel--;
+				if (currentLevel == 0) {
+				}
+				if (currentLevel == 1) {
+					newHierarchy.pages.push_back(newPage);
+				}
+				if (currentLevel == 2) {
+					newPage.lists.push_back(newList);
+				}
+			}
+			if (currentLine[0] != '[') {
+				newList.items.push_back(currentLine);
+			}
+		}
+		print(1, "H:" + newHierarchy.name);
+		for (int a = 0; a < newHierarchy.pages.size(); a++) {
+			print(1, "P:" + newHierarchy.pages[a].name);
+			for (int b = 0; b < newHierarchy.pages[a].lists.size(); b++) {
+				print(1, "L:" + newHierarchy.pages[a].lists[b].name);
+				for (int c = 0; c < newHierarchy.pages[a].lists[b].items.size(); c++) {
+					print(1, "I:" + newHierarchy.pages[a].lists[b].items[c]);
+				}
+			}
+		}
+
+		return(newHierarchy);
 	}
 	/*>>>>>-----DISPLAY-----<<<<<*/
 	/*>>>>>-----Loading Bars-----<<<<<*/
-	int initilizeLoadingBar(string process) {
+	int initializeLoadingBar(string process) {
 		loadingBarPointers.push_back(windows.size());
 		createWindow(process, (windows[0].sizeX / 2) - (windows[0].sizeX / 4), (windows[0].sizeY / 2) - 1, (windows[0].sizeX / 2), 3, true, true);
 		return(loadingBarPointers.size() - 1);

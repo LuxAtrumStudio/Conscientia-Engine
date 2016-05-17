@@ -1,0 +1,27 @@
+26
+[Test]{
+	[Page 1]{
+		[List 1]{
+			Item 1.1.A
+			Item 1.1.B
+			Item 1.1.C
+		}
+		[List 2]{
+			Item 1.2.A
+			Item 1.2.B
+			Item 1.2.C
+		}
+	}
+	[Page 2]{
+		[List 1]{
+			Item 2.1.A
+			Item 2.1.B
+			Item 2.1.C
+		}
+		[List 2]{
+			Item 2.2.A
+			Item 2.2.B
+			Item 2.2.C
+		}
+	}
+}
