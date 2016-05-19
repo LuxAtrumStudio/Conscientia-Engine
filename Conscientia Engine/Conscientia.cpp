@@ -391,6 +391,8 @@ namespace CONSCIENTIA {
 	void update() {
 		displayBuffer = loadBuffer;
 		SetConsoleActiveScreenBuffer(displayBuffer);
+		loadBuffer = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE, 0, NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
+		//loadBuffer = displayBuffer;
 	}
 	/*=====>>>>>-----Termination-----<<<<<=====*/
 	void terminateConscientia() {
@@ -401,6 +403,8 @@ namespace CONSCIENTIA {
 	/*>>>>>-----INTERACTIVE-----<<<<<*/
 	/*>>>>>-----Menu-----<<<<<*/
 	string menu(string menuFileDirectory, int posX, int posY, int sizeX, int sizeY) {
+		bool run = true, update = true;
+		int in = -1;
 		menuHierarchy menu;
 		menu = loadMenuHierarchy(menuFileDirectory);
 		int windowPointer = windows.size();
@@ -408,6 +412,38 @@ namespace CONSCIENTIA {
 		int currentPage = 0, currentList = 0, currentItem = 0;
 		createWindow(menu.name, posX, posY, sizeX, sizeY, true, true);
 		setCurrentWindow(windowPointer);
+		while (run == true) {
+			if (update == true) {
+				update = false;
+				displayMenu(menu, currentList, currentItem, currentPage);
+				createWindow(menu.name, posX, posY, sizeX, sizeY, true, true);
+			}
+			in = gint();
+			if (in == 'a' && currentList > 0) {
+				currentList--;
+				update = true;
+			}
+			if (in == 's' && currentItem < menu.pages[currentPage].lists[currentList].items.size() - 1) {
+				currentItem++;
+				update = true;
+			}
+			if (in == 'd' && currentList < menu.pages[currentPage].lists.size() - 1) {
+				currentList++;
+				update = true;
+			}
+			if (in == 'q' && currentPage > 0) {
+				currentPage--;
+				update = true;
+			}
+			if (in == 'w' && currentItem > 0) {
+				currentItem--;
+				update = true;
+			}
+			if (in == 'e' && currentPage < menu.pages.size() - 1) {
+				currentPage++;
+				update = true;
+			}
+		}
 		return("");
 	}
 	menuHierarchy loadMenuHierarchy(string menuFileDirectory) {
@@ -503,24 +539,74 @@ namespace CONSCIENTIA {
 		}
 		return(newHierarchy);
 	}
-	void displayMenu(menuHierarchy menu, int x, int y, int z) {
+	void displayMenu(menuHierarchy menu, int xlist, int yitem, int zpage) {
+		cclearWindow();
+		string v, h, i, line;
+		char vc, hc, ic;
+		stringstream vss, hss, iss;
+		vc = char(179);
+		hc = char(196);
+		ic = char(193);
+		vss << vc;
+		vss >> v;
+		hss << hc;
+		hss >> h;
+		iss << ic;
+		iss >> i;
 		int sizeX, sizeY;
 		sizeX = windows[currentWindowPointer].sizeX - 2;
 		sizeY = windows[currentWindowPointer].sizeY - 2;
 		int pageWidth, listWidth;
+		int pagesDisplayed = menu.pages.size(), listsDisplayed = menu.pages[zpage].lists.size(), maxItemsDisplayed = windows[currentWindowPointer].sizeY - 5;
+		int x, y, yn;
 		pageWidth = sizeX / menu.pages.size();
-		if (pageWidth < sizeX / 6) {
-			pageWidth = sizeX / 5;
+		if (pageWidth < (sizeX - 5) / 6) {
+			pageWidth = (sizeX - 4) / 5;
+			pagesDisplayed = 5;
 		}
-		listWidth = sizeX / menu.pages[z].lists.size();
+		for (int a = 0; a < pageWidth - 1; a++) {
+			line = line + h;
+		}
+		listWidth = sizeX / menu.pages[zpage].lists.size();
 		if (listWidth < sizeX / 9) {
 			listWidth = sizeX / 8;
+			listsDisplayed = 8;
 		}
+		x = 1;
+		y = 1;
+		for (int a = 0; a < pagesDisplayed; a++) {
+			cmprint(x + findTextStart(menu.pages[a].name, pageWidth), y, menu.pages[a].name);
+			if (zpage != a) {
+				cmprint(x + 1, y + 1, line);
+			}
+			x = x + pageWidth;
+			if (a != pagesDisplayed - 1) {
+				cmprint(x, y, v);
+				cmprint(x, y + 1, i);
+			}
+		}
+		x = 0;
+		y = y + 2;
+		for (int a = 0; a < listsDisplayed; a++) {
+			cmprint(x + findTextStart("<" + menu.pages[zpage].lists[a].name + ">", listWidth), y, "<" + menu.pages[zpage].lists[a].name + ">");
+			yn = y + 1;
+			for (int b = 0; b < maxItemsDisplayed && b < menu.pages[zpage].lists[a].items.size(); b++) {
+				if (a == xlist && b == yitem) {
+					cmprint(x + findTextStart(">" + menu.pages[zpage].lists[a].items[b] + "<", listWidth), yn, ">" + menu.pages[zpage].lists[a].items[b] + "<");
+				}
+				else {
+					cmprint(x + findTextStart(menu.pages[zpage].lists[a].items[b], listWidth), yn, menu.pages[zpage].lists[a].items[b]);
+				}
+				yn++;
+			}
+			x = x + listWidth;
+		}
+		update();
 	}
 	int findTextStart(string str, int space) {
 		space = space / 2;
 		int strSize = str.size();
-		strSize / 2;
+		strSize = strSize / 2;
 		int strStart = space - strSize;
 		return(strStart);
 	}
