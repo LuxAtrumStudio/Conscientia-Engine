@@ -19,6 +19,7 @@ vector<window> windows;
 int currentWindowPointer = 0;
 bool autoRefresh = false;
 /*=====>>>>>-----Windows-----<<<<<=====*/
+int currentBuffer = 1;
 HANDLE loadBuffer, displayBuffer;
 _CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
 
@@ -392,7 +393,6 @@ namespace CONSCIENTIA {
 		displayBuffer = loadBuffer;
 		SetConsoleActiveScreenBuffer(displayBuffer);
 		loadBuffer = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE, 0, NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
-		//loadBuffer = displayBuffer;
 	}
 	/*=====>>>>>-----Termination-----<<<<<=====*/
 	void terminateConscientia() {
@@ -422,6 +422,9 @@ namespace CONSCIENTIA {
 			if (in == 'a' && currentList > 0) {
 				currentList--;
 				update = true;
+				if (menu.pages[currentPage].lists[currentList].items.size() <= currentItem) {
+					currentItem = menu.pages[currentPage].lists[currentList].items.size() - 1;
+				}
 			}
 			if (in == 's' && currentItem < menu.pages[currentPage].lists[currentList].items.size() - 1) {
 				currentItem++;
@@ -430,10 +433,19 @@ namespace CONSCIENTIA {
 			if (in == 'd' && currentList < menu.pages[currentPage].lists.size() - 1) {
 				currentList++;
 				update = true;
+				if (menu.pages[currentPage].lists[currentList].items.size() <= currentItem) {
+					currentItem = menu.pages[currentPage].lists[currentList].items.size() - 1;
+				}
 			}
 			if (in == 'q' && currentPage > 0) {
 				currentPage--;
 				update = true;
+				if (menu.pages[currentPage].lists.size() <= currentList) {
+					currentList = menu.pages[currentPage].lists.size() - 1;
+				}
+				if (menu.pages[currentPage].lists[currentList].items.size() <= currentItem) {
+					currentItem = menu.pages[currentPage].lists[currentList].items.size() - 1;
+				}
 			}
 			if (in == 'w' && currentItem > 0) {
 				currentItem--;
@@ -442,6 +454,12 @@ namespace CONSCIENTIA {
 			if (in == 'e' && currentPage < menu.pages.size() - 1) {
 				currentPage++;
 				update = true;
+				if (menu.pages[currentPage].lists.size() <= currentList) {
+					currentList = menu.pages[currentPage].lists.size() - 1;
+				}
+				if (menu.pages[currentPage].lists[currentList].items.size() <= currentItem) {
+					currentItem = menu.pages[currentPage].lists[currentList].items.size() - 1;
+				}
 			}
 		}
 		return("");
