@@ -30,7 +30,7 @@ struct luxCode {
 };
 /*>>>>>-----FUNCTIONS-----<<<<<*/
 /*>>>>>-----Menu-----<<<<<*/
-
+int firstPage = 0, firstList = 0, firstItem = 0;
 /*>>>>>-----Loading Bars-----<<<<<*/
 vector<int> loadingBarPointers;
 
@@ -415,7 +415,7 @@ namespace CONSCIENTIA {
 		while (run == true) {
 			if (update == true) {
 				update = false;
-				displayMenu(menu, currentList, currentItem, currentPage);
+				displayMenu(menu, currentPage, currentList, currentItem);
 				createWindow(menu.name, posX, posY, sizeX, sizeY, true, true);
 			}
 			in = gint();
@@ -557,7 +557,7 @@ namespace CONSCIENTIA {
 		}
 		return(newHierarchy);
 	}
-	void displayMenu(menuHierarchy menu, int xlist, int yitem, int zpage) {
+	void displayMenu(menuHierarchy menu, int currentPage, int currentList, int currentItem) {
 		cclearWindow();
 		string v, h, i, line;
 		char vc, hc, ic;
@@ -575,7 +575,7 @@ namespace CONSCIENTIA {
 		sizeX = windows[currentWindowPointer].sizeX - 2;
 		sizeY = windows[currentWindowPointer].sizeY - 2;
 		int pageWidth, listWidth;
-		int pagesDisplayed = menu.pages.size(), listsDisplayed = menu.pages[zpage].lists.size(), maxItemsDisplayed = windows[currentWindowPointer].sizeY - 5;
+		int pagesDisplayed = menu.pages.size(), listsDisplayed = menu.pages[currentPage].lists.size(), maxItemsDisplayed = windows[currentWindowPointer].sizeY - 5;
 		int x, y, yn;
 		pageWidth = sizeX / menu.pages.size();
 		if (pageWidth < (sizeX - 5) / 6) {
@@ -585,16 +585,36 @@ namespace CONSCIENTIA {
 		for (int a = 0; a < pageWidth - 1; a++) {
 			line = line + h;
 		}
-		listWidth = sizeX / menu.pages[zpage].lists.size();
+		listWidth = sizeX / menu.pages[currentPage].lists.size();
 		if (listWidth < sizeX / 9) {
 			listWidth = sizeX / 8;
 			listsDisplayed = 8;
 		}
+
+		while (currentPage >= pagesDisplayed + firstPage - 1 && pagesDisplayed + firstPage < menu.pages.size()) {
+			firstPage++;
+		}
+		while (currentPage <= firstPage && firstPage > 0) {
+			firstPage--;
+		}
+		while (currentList >= listsDisplayed + firstList - 1 && listsDisplayed + firstList < menu.pages[currentPage].lists.size()) {
+			firstList++;
+		}
+		while (currentList <= firstList && firstList > 0) {
+			firstList--;
+		}
+		while (currentItem >= maxItemsDisplayed + firstItem - 1 && maxItemsDisplayed + firstItem < menu.pages[currentPage].lists[currentList].items.size()) {
+			firstItem++;
+		}
+		while (currentItem <= firstItem && firstItem > 0) {
+			firstItem--;
+		}
+
 		x = 1;
 		y = 1;
-		for (int a = 0; a < pagesDisplayed; a++) {
+		for (int a = firstPage; a < pagesDisplayed + firstPage; a++) {
 			cmprint(x + findTextStart(menu.pages[a].name, pageWidth), y, menu.pages[a].name);
-			if (zpage != a) {
+			if (currentPage != a) {
 				cmprint(x + 1, y + 1, line);
 			}
 			x = x + pageWidth;
@@ -605,15 +625,15 @@ namespace CONSCIENTIA {
 		}
 		x = 0;
 		y = y + 2;
-		for (int a = 0; a < listsDisplayed; a++) {
-			cmprint(x + findTextStart("<" + menu.pages[zpage].lists[a].name + ">", listWidth), y, "<" + menu.pages[zpage].lists[a].name + ">");
+		for (int a = firstList; a < listsDisplayed + firstList; a++) {
+			cmprint(x + findTextStart("<" + menu.pages[currentPage].lists[a].name + ">", listWidth), y, "<" + menu.pages[currentPage].lists[a].name + ">");
 			yn = y + 1;
-			for (int b = 0; b < maxItemsDisplayed && b < menu.pages[zpage].lists[a].items.size(); b++) {
-				if (a == xlist && b == yitem) {
-					cmprint(x + findTextStart(">" + menu.pages[zpage].lists[a].items[b] + "<", listWidth), yn, ">" + menu.pages[zpage].lists[a].items[b] + "<");
+			for (int b = firstItem; b < maxItemsDisplayed + firstItem && b < menu.pages[currentPage].lists[a].items.size(); b++) {
+				if (a == currentList && b == currentItem) {
+					cmprint(x + findTextStart(">" + menu.pages[currentPage].lists[a].items[b] + "<", listWidth), yn, ">" + menu.pages[currentPage].lists[a].items[b] + "<");
 				}
 				else {
-					cmprint(x + findTextStart(menu.pages[zpage].lists[a].items[b], listWidth), yn, menu.pages[zpage].lists[a].items[b]);
+					cmprint(x + findTextStart(menu.pages[currentPage].lists[a].items[b], listWidth), yn, menu.pages[currentPage].lists[a].items[b]);
 				}
 				yn++;
 			}
