@@ -31,6 +31,7 @@ struct luxCode {
 /*>>>>>-----FUNCTIONS-----<<<<<*/
 /*>>>>>-----Menu-----<<<<<*/
 int firstPage = 0, firstList = 0, firstItem = 0;
+int menuPointer;
 /*>>>>>-----Loading Bars-----<<<<<*/
 vector<int> loadingBarPointers;
 
@@ -405,61 +406,92 @@ namespace CONSCIENTIA {
 	string menu(string menuFileDirectory, int posX, int posY, int sizeX, int sizeY) {
 		bool run = true, update = true;
 		int in = -1;
-		menuHierarchy menu;
-		menu = loadMenuHierarchy(menuFileDirectory);
+		menuHierarchy menuStruct;
+		menuStruct = loadMenuHierarchy(menuFileDirectory);
 		int windowPointer = windows.size();
 		int pageWidth, listWidth;
 		int currentPage = 0, currentList = 0, currentItem = 0;
-		createWindow(menu.name, posX, posY, sizeX, sizeY, true, true);
+		createWindow(menuStruct.name, posX, posY, sizeX, sizeY, true, true);
 		setCurrentWindow(windowPointer);
 		while (run == true) {
 			if (update == true) {
 				update = false;
-				displayMenu(menu, currentPage, currentList, currentItem);
-				createWindow(menu.name, posX, posY, sizeX, sizeY, true, true);
+				displayMenu(menuStruct, currentPage, currentList, currentItem);
+				drawBorder(currentWindowPointer);
+				drawTitle(currentWindowPointer);
+				if (menuFileDirectory == "Resources/Menu Options.lux") {
+					drawBorder(menuPointer);
+					drawTitle(menuPointer);
+				}
 			}
 			in = gint();
 			if (in == 'a' && currentList > 0) {
 				currentList--;
 				update = true;
-				if (menu.pages[currentPage].lists[currentList].items.size() <= currentItem) {
-					currentItem = menu.pages[currentPage].lists[currentList].items.size() - 1;
+				if (menuStruct.pages[currentPage].lists[currentList].items.size() <= currentItem) {
+					currentItem = menuStruct.pages[currentPage].lists[currentList].items.size() - 1;
 				}
 			}
-			if (in == 's' && currentItem < menu.pages[currentPage].lists[currentList].items.size() - 1) {
+			if (in == 's' && currentItem < menuStruct.pages[currentPage].lists[currentList].items.size() - 1) {
 				currentItem++;
 				update = true;
 			}
-			if (in == 'd' && currentList < menu.pages[currentPage].lists.size() - 1) {
+			if (in == 'd' && currentList < menuStruct.pages[currentPage].lists.size() - 1) {
 				currentList++;
 				update = true;
-				if (menu.pages[currentPage].lists[currentList].items.size() <= currentItem) {
-					currentItem = menu.pages[currentPage].lists[currentList].items.size() - 1;
+				if (menuStruct.pages[currentPage].lists[currentList].items.size() <= currentItem) {
+					currentItem = menuStruct.pages[currentPage].lists[currentList].items.size() - 1;
 				}
 			}
 			if (in == 'q' && currentPage > 0) {
 				currentPage--;
 				update = true;
-				if (menu.pages[currentPage].lists.size() <= currentList) {
-					currentList = menu.pages[currentPage].lists.size() - 1;
+				if (menuStruct.pages[currentPage].lists.size() <= currentList) {
+					currentList = menuStruct.pages[currentPage].lists.size() - 1;
 				}
-				if (menu.pages[currentPage].lists[currentList].items.size() <= currentItem) {
-					currentItem = menu.pages[currentPage].lists[currentList].items.size() - 1;
+				if (menuStruct.pages[currentPage].lists[currentList].items.size() <= currentItem) {
+					currentItem = menuStruct.pages[currentPage].lists[currentList].items.size() - 1;
 				}
 			}
 			if (in == 'w' && currentItem > 0) {
 				currentItem--;
 				update = true;
 			}
-			if (in == 'e' && currentPage < menu.pages.size() - 1) {
+			if (in == 'e' && currentPage < menuStruct.pages.size() - 1) {
 				currentPage++;
 				update = true;
-				if (menu.pages[currentPage].lists.size() <= currentList) {
-					currentList = menu.pages[currentPage].lists.size() - 1;
+				if (menuStruct.pages[currentPage].lists.size() <= currentList) {
+					currentList = menuStruct.pages[currentPage].lists.size() - 1;
 				}
-				if (menu.pages[currentPage].lists[currentList].items.size() <= currentItem) {
-					currentItem = menu.pages[currentPage].lists[currentList].items.size() - 1;
+				if (menuStruct.pages[currentPage].lists[currentList].items.size() <= currentItem) {
+					currentItem = menuStruct.pages[currentPage].lists[currentList].items.size() - 1;
 				}
+			}
+			if (in == 27 && menuFileDirectory != "Resources/Menu Options.lux") {
+				string function = "";
+				menuPointer = currentWindowPointer;
+				function = menu("Resources/Menu Options.lux", posX + (sizeX / 4), posY + (sizeY / 4), sizeX / 2, sizeY / 2);
+				currentWindowPointer = menuPointer;
+				if (function == "Quit") {
+					return("");
+				}
+				if (function == "Select Current") {
+					in = 13;
+				}
+				if (function == "Location Search") {
+					menuSearch(0, menuStruct, posX, posY, sizeX, sizeY, &currentPage, &currentList, &currentItem);
+				}
+				if (function == "Item Search") {
+					menuSearch(1, menuStruct, posX, posY, sizeX, sizeY, &currentPage, &currentList, &currentItem);
+				}
+				update = true;
+			}
+			if (in == 13) {
+				firstItem = 0;
+				firstList = 0;
+				firstPage = 0;
+				terminateWindow(currentWindowPointer);
+				return(menuStruct.pages[currentPage].lists[currentList].items[currentItem]);
 			}
 		}
 		return("");
@@ -578,9 +610,9 @@ namespace CONSCIENTIA {
 		int pagesDisplayed = menu.pages.size(), listsDisplayed = menu.pages[currentPage].lists.size(), maxItemsDisplayed = windows[currentWindowPointer].sizeY - 5;
 		int x, y, yn;
 		pageWidth = sizeX / menu.pages.size();
-		if (pageWidth < (sizeX - 5) / 6) {
-			pageWidth = (sizeX - 4) / 5;
-			pagesDisplayed = 5;
+		if (pageWidth < (sizeX - 4) / 5) {
+			pageWidth = (sizeX - 3) / 4;
+			pagesDisplayed = 4;
 		}
 		for (int a = 0; a < pageWidth - 1; a++) {
 			line = line + h;
@@ -647,6 +679,8 @@ namespace CONSCIENTIA {
 		strSize = strSize / 2;
 		int strStart = space - strSize;
 		return(strStart);
+	}
+	void menuSearch(int mode, menuHierarchy menuStruct, int posX, int posY, int sizeX, int sizeY, int *currentPage, int *currentList, int *currentItem) {
 	}
 	/*>>>>>-----DISPLAY-----<<<<<*/
 	/*>>>>>-----Loading Bars-----<<<<<*/

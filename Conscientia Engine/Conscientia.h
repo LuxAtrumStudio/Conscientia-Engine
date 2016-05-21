@@ -82,6 +82,7 @@ namespace CONSCIENTIA {
 	menuHierarchy loadMenuHierarchy(string menuFileDirectory);
 	void displayMenu(menuHierarchy menu, int currentPage, int currentList, int currentItem);
 	int findTextStart(string str, int space);
+	void menuSearch(int mode, menuHierarchy menuStruct, int posX, int posY, int sizeX, int sizeY, int *currentPage, int *currentList, int *currentItem);
 	/*>>>>>-----DISPLAY-----<<<<<*/
 	/*>>>>>-----Loading Bars-----<<<<<*/
 	int initializeLoadingBar(string process);

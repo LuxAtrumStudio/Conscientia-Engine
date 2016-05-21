@@ -28,8 +28,11 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Log.txt">
+    <None Include="Test.lux">
       <Filter>Resource Files</Filter>
-    </Text>
+    </None>
+    <None Include="Resources\Menu Options.lux">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
