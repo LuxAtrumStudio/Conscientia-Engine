@@ -117,10 +117,6 @@
   <ItemGroup>
     <ClInclude Include="Conscientia.h" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Menu Options.lux" />
-    <None Include="Test.lux" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
