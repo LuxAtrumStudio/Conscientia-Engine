@@ -73,7 +73,6 @@ namespace CONSCIENTIA {
 	void update();
 	/*=====>>>>>-----Termination-----<<<<<=====*/
 	void terminateConscientia();
-
 	/*=====>>>>>-----ADVANCED FUNCITONS-----<<<<<=====*/
 	/*=====>>>>>-----Output Funcitons-----<<<<<=====*/
 	/*>>>>>-----INTERACTIVE-----<<<<<*/
