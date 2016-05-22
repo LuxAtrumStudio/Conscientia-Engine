@@ -31,7 +31,6 @@ struct luxCode {
 /*>>>>>-----FUNCTIONS-----<<<<<*/
 /*>>>>>-----Menu-----<<<<<*/
 int firstPage = 0, firstList = 0, firstItem = 0;
-int menuPointer;
 /*>>>>>-----Loading Bars-----<<<<<*/
 vector<int> loadingBarPointers;
 
@@ -416,13 +415,9 @@ namespace CONSCIENTIA {
 		while (run == true) {
 			if (update == true) {
 				update = false;
-				displayMenu(menuStruct, currentPage, currentList, currentItem);
 				drawBorder(currentWindowPointer);
 				drawTitle(currentWindowPointer);
-				if (menuFileDirectory == "Resources/Menu Options.lux") {
-					drawBorder(menuPointer);
-					drawTitle(menuPointer);
-				}
+				displayMenu(menuStruct, currentPage, currentList, currentItem);
 			}
 			in = gint();
 			if (in == 'a' && currentList > 0) {
@@ -467,29 +462,13 @@ namespace CONSCIENTIA {
 					currentItem = menuStruct.pages[currentPage].lists[currentList].items.size() - 1;
 				}
 			}
-			if (in == 27 && menuFileDirectory != "Resources/Menu Options.lux") {
-				string function = "";
-				menuPointer = currentWindowPointer;
-				function = menu("Resources/Menu Options.lux", posX + (sizeX / 4), posY + (sizeY / 4), sizeX / 2, sizeY / 2);
-				currentWindowPointer = menuPointer;
-				if (function == "Quit") {
-					return("");
-				}
-				if (function == "Select Current") {
-					in = 13;
-				}
-				if (function == "Location Search") {
-					menuSearch(0, menuStruct, posX, posY, sizeX, sizeY, &currentPage, &currentList, &currentItem);
-				}
-				if (function == "Item Search") {
-					menuSearch(1, menuStruct, posX, posY, sizeX, sizeY, &currentPage, &currentList, &currentItem);
-				}
-				update = true;
-			}
-			if (in == 13) {
+			if (in == 27) {
 				firstItem = 0;
 				firstList = 0;
 				firstPage = 0;
+				return("");
+			}
+			if (in == 13) {
 				terminateWindow(currentWindowPointer);
 				return(menuStruct.pages[currentPage].lists[currentList].items[currentItem]);
 			}
@@ -679,8 +658,6 @@ namespace CONSCIENTIA {
 		strSize = strSize / 2;
 		int strStart = space - strSize;
 		return(strStart);
-	}
-	void menuSearch(int mode, menuHierarchy menuStruct, int posX, int posY, int sizeX, int sizeY, int *currentPage, int *currentList, int *currentItem) {
 	}
 	/*>>>>>-----DISPLAY-----<<<<<*/
 	/*>>>>>-----Loading Bars-----<<<<<*/
