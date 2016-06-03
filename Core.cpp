@@ -4,8 +4,8 @@ using namespace std;
 
 
 int main(){
-  Conscientia::initilizeConscientia();
-  Conscientia::createWindow("Main", 5, 5, 10, 10, true);
-  Conscientia::update();
+  CONSCIENTIA::initializeConscientia();
+  CONSCIENTIA::createWindow("Main", 5, 5, 10, 10, true, true);
+  CONSCIENTIA::update();
   while(1);
 }

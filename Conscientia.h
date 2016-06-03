@@ -23,6 +23,10 @@ namespace CONSCIENTIA {
 	void advancedInit(bool cursor, bool echo, bool raw);
 	/*>>>>>-----SETTINGS-----<<<<<*/
 	void setAutoRefresh(bool setting);
+	/*>>>>>-----NCURSES-----<<<<<*/
+	void setCursor(bool setting);
+	void setEcho(bool setting);
+	void setRaw(bool setting);
 	/*=====>>>>>-----Run Time-----<<<<<=====*/
 	/*>>>>>-----WINDOW-----<<<<<*/
 	/*>>>>>-----Initilization-----<<<<<*/

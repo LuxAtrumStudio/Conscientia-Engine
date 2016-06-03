@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <sstream>
 #include <ncurses.h>
 #include <vector>
 #include "Conscientia.h"
@@ -10,25 +11,27 @@ struct window {
   string name;
   WINDOW * pointer;
   int startX, startY, sizeX, sizeY, endX, endY;
+  int cursorX, cursorY;
+  bool border, title;
 };
 vector<window> windows;
 int currentWindowPointer = 0;
 bool autoRefresh = false;
 /*=====>>>>>-----ADVNACED DATA-----<<<<<=====*/
 /*=====>>>>>-----Global-----<<<<<=====*/
-struct lux code {
+struct luxCode {
   vector<string> lines;
-}
+};
 /*>>>>>-----FUNCTIONS-----<<<<<*/
 /*>>>>>-----Menu-----<<<<<*/
-int firstPage= 0, firstList = 0, firstItem = 0;
+int firstPage = 0, firstList = 0, firstItem = 0;
 /*>>>>>-----Loading Bars-----<<<<<*/
 vector<int> loadingBarPointers;
-namespace Conscientia
+namespace CONSCIENTIA
 {
   /*=====>>>>>-----FUNCTIONS-----<<<<<=====*/
   /*=====>>>>>-----Initilization-----<<<<<=====*/
-  void initilizeConscientia(){
+  void initializeConscientia(){
     initscr();
     keypad(stdscr, TRUE);
     window declaration;
@@ -39,15 +42,14 @@ namespace Conscientia
     getmaxyx(stdscr, declaration.sizeY, declaration.sizeX);
     declaration.cursorX = 0;
     declaration.cursorY = 0;
-    declaration.endX = sizeX;
-    declaration.endY = sizeY;
+    declaration.endX = declaration.sizeX;
+    declaration.endY = declaration.sizeY;
     declaration.border = false;
     declaration.title = false;
     windows.push_back(declaration);
-    initilizeColors();
   }
   void advancedInit(bool cursor, bool echo, bool raw){
-    initilizeConscientia();
+    initializeConscientia();
     setCursor(cursor);
     setEcho(echo);
     setRaw(raw);
@@ -143,7 +145,7 @@ namespace Conscientia
   void clearWindow(int pointer){
     wclear(windows[pointer].pointer);
   }
-  void setWindowTitle(in tpointer, bool setting){
+  void setWindowTitle(int pointer, bool setting){
     if(windows[pointer].title != setting){
       windows[pointer].title = setting;
       drawTitle(pointer);
@@ -180,10 +182,10 @@ namespace Conscientia
     int titleSize = windows[pointer].name.size();
     int windowSize = windows[pointer].sizeX;
     int posx;
-    windowSize = widnowSize / 2;
+    windowSize = windowSize / 2;
     titleSize = titleSize / 2;
     posx = windowSize - titleSize;
-    mvwprintw(windows[pointer].pointer, 0, posx, windows[pointer].name);
+    mvwprintw(windows[pointer].pointer, 0, posx, windows[pointer].name.c_str());
   }
   /*>>>>>-----Termination-----<<<<<*/
   void terminateAllWindows(){
@@ -193,7 +195,7 @@ namespace Conscientia
   }
   void terminateWindow(int pointer){
     if(windows[pointer].border == true){
-      setBorder(poitner, false);
+      setBorder(pointer, false);
     }
     if(windows[pointer].title == true){
       setWindowTitle(pointer, false);
@@ -225,8 +227,8 @@ namespace Conscientia
   string cstr(){
     string in;
     char inch;
-    int rawing = 0;
-    while(rawing != 13){
+    int rawint = 0;
+    while(rawint != 13){
       rawint = int(getch());
       inch = char(rawint);
       in = in + inch;
@@ -271,7 +273,7 @@ namespace Conscientia
             }
           }
         }
-        if(wndows[pointer].border == true){
+        if(windows[pointer].border == true){
           if(windows[pointer].cursorX >= windows[pointer].sizeX - 1){
             windows[pointer].cursorX = 1;
             windows[pointer].cursorY++;
@@ -285,12 +287,12 @@ namespace Conscientia
         stringstream sstream;
         sstream << str[a];
         sstream >> character;
-        mvwprintw(pointer, windows[pointer].cursorY, windows[pointer].cursorX, character);
+        mvwprintw(windows[pointer].pointer, windows[pointer].cursorY, windows[pointer].cursorX, character.c_str());
         windows[pointer].cursorX++;
       }
     }
     if(autoRefresh == true){
-      update(pointer);
+      update();
     }
   }
   void mprint(int pointer, int x, int y, string str){
