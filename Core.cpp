@@ -5,7 +5,7 @@ using namespace std;
 
 int main(){
   CONSCIENTIA::initializeConscientia();
-  CONSCIENTIA::createWindow("Main", 5, 5, 10, 10, true, true);
+  CONSCIENTIA::menu("Test.lux", 1, 1, 120, 30);
   CONSCIENTIA::update();
   while(1);
 }

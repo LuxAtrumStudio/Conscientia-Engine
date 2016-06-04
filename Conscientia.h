@@ -50,6 +50,7 @@ namespace CONSCIENTIA {
 	void fsetCurrentWindow(string name);
 	/*-----NCURSES-----*/
 	void drawTitle(int pointer);
+	void drawBorder(int pointer, bool setting);
 	/*>>>>>-----Termination-----<<<<<*/
 	void terminateAllWindows();
 	void terminateWindow(int pointer);

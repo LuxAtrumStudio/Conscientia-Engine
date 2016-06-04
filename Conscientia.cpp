@@ -47,6 +47,8 @@ namespace CONSCIENTIA
     declaration.border = false;
     declaration.title = false;
     windows.push_back(declaration);
+    setCursor(false);
+    setEcho(false);
   }
   void advancedInit(bool cursor, bool echo, bool raw){
     initializeConscientia();
@@ -111,10 +113,10 @@ namespace CONSCIENTIA
     if(title == true && border == false){
       declaration.cursorY++;
     }
+    windows.push_back(declaration);
     if(title == true){
       drawTitle(windows.size() - 1);
     }
-    windows.push_back(declaration);
   }
   /*>>>>>-----Management-----<<<<<*/
   void clearAllWindows(){
@@ -134,12 +136,7 @@ namespace CONSCIENTIA
   void setBorder(int pointer, bool setting){
     if(windows[pointer].border != setting){
       windows[pointer].border = setting;
-      if(setting == false){
-        wborder(windows[pointer].pointer, ' ', ' ', ' ', ' ', ' ', ' ', ' ' , ' ');
-      }
-      else if(setting == true){
-        box(windows[pointer].pointer, 0, 0);
-      }
+      drawBorder(pointer, setting);
     }
   }
   void clearWindow(int pointer){
@@ -186,6 +183,14 @@ namespace CONSCIENTIA
     titleSize = titleSize / 2;
     posx = windowSize - titleSize;
     mvwprintw(windows[pointer].pointer, 0, posx, windows[pointer].name.c_str());
+  }
+  void drawBorder(int pointer, bool setting){
+    if(setting == false){
+      wborder(windows[pointer].pointer, ' ', ' ', ' ', ' ', ' ', ' ', ' ' , ' ');
+    }
+    else if(setting == true){
+      box(windows[pointer].pointer, 0, 0);
+    }
   }
   /*>>>>>-----Termination-----<<<<<*/
   void terminateAllWindows(){
@@ -250,14 +255,20 @@ namespace CONSCIENTIA
         int b = a + 1;
         if(str[b] == 'n'){
           windows[pointer].cursorY++;
+          windows[pointer].cursorX = 0;
           if(windows[pointer].cursorY > windows[pointer].sizeY){
             windows[pointer].cursorY = 0;
             if(windows[pointer].border == true){
+              windows[pointer].cursorY++;
+              windows[pointer].cursorX++;
+            }
+            if(windows[pointer].border == false && windows[pointer].title == true){
               windows[pointer].cursorY++;
             }
             clearWindow(pointer);
           }
         }
+        a = a + 2;
       }
       else if(str[a] != '/'){
         if(windows[pointer].border == false){
@@ -326,4 +337,296 @@ namespace CONSCIENTIA
   void terminateConscientia(){
     endwin();
   }
+  /*=====>>>>>-----ADVANCED FUNCITONS-----<<<<<=====*/
+	/*=====>>>>>-----Output Funcitons-----<<<<<=====*/
+	/*>>>>>-----INTERACTIVE-----<<<<<*/
+	/*>>>>>-----Menu-----<<<<<*/
+	string menu(string menuFileDirectory, int posX, int posY, int sizeX, int sizeY) {
+		bool run = true, update = true;
+		int in = -1;
+		menuHierarchy menuStruct;
+		menuStruct = loadMenuHierarchy(menuFileDirectory);
+		int windowPointer = windows.size();
+		int pageWidth, listWidth;
+		int currentPage = 0, currentList = 0, currentItem = 0;
+		createWindow(menuStruct.name, posX, posY, sizeX, sizeY, true, true);
+		setCurrentWindow(windowPointer);
+		while (run == true) {
+			if (update == true) {
+				update = false;
+				displayMenu(menuStruct, currentPage, currentList, currentItem);
+        drawBorder(currentWindowPointer, true);
+        drawTitle(currentWindowPointer);
+        CONSCIENTIA::update();
+			}
+			in = gint();
+			if (in == 'a' && currentList > 0) {
+				currentList--;
+				update = true;
+				if (menuStruct.pages[currentPage].lists[currentList].items.size() <= currentItem) {
+					currentItem = menuStruct.pages[currentPage].lists[currentList].items.size() - 1;
+				}
+			}
+			if (in == 's' && currentItem < menuStruct.pages[currentPage].lists[currentList].items.size() - 1) {
+				currentItem++;
+				update = true;
+			}
+			if (in == 'd' && currentList < menuStruct.pages[currentPage].lists.size() - 1) {
+				currentList++;
+				update = true;
+				if (menuStruct.pages[currentPage].lists[currentList].items.size() <= currentItem) {
+					currentItem = menuStruct.pages[currentPage].lists[currentList].items.size() - 1;
+				}
+			}
+			if (in == 'q' && currentPage > 0) {
+				currentPage--;
+				update = true;
+				if (menuStruct.pages[currentPage].lists.size() <= currentList) {
+					currentList = menuStruct.pages[currentPage].lists.size() - 1;
+				}
+				if (menuStruct.pages[currentPage].lists[currentList].items.size() <= currentItem) {
+					currentItem = menuStruct.pages[currentPage].lists[currentList].items.size() - 1;
+				}
+			}
+			if (in == 'w' && currentItem > 0) {
+				currentItem--;
+				update = true;
+			}
+			if (in == 'e' && currentPage < menuStruct.pages.size() - 1) {
+				currentPage++;
+				update = true;
+				if (menuStruct.pages[currentPage].lists.size() <= currentList) {
+					currentList = menuStruct.pages[currentPage].lists.size() - 1;
+				}
+				if (menuStruct.pages[currentPage].lists[currentList].items.size() <= currentItem) {
+					currentItem = menuStruct.pages[currentPage].lists[currentList].items.size() - 1;
+				}
+			}
+			if (in == 27) {
+				firstItem = 0;
+				firstList = 0;
+				firstPage = 0;
+				return("");
+			}
+			if (in == 13) {
+				terminateWindow(currentWindowPointer);
+				return(menuStruct.pages[currentPage].lists[currentList].items[currentItem]);
+			}
+		}
+		return("");
+	}
+	menuHierarchy loadMenuHierarchy(string menuFileDirectory) {
+		string line;
+		luxCode rawCode;
+		int lineCount = 0, totalLines;
+		int loadBar = -1;
+		ifstream load(menuFileDirectory.c_str());
+		if (load.is_open()) {
+			load >> lineCount;
+			totalLines = lineCount;
+			if (lineCount >= 50) {
+				loadBar = initializeLoadingBar("Loading Menu");
+			}
+			lineCount = 0;
+			getline(load, line);
+			while (getline(load, line)) {
+				rawCode.lines.push_back(line);
+				lineCount++;
+				if (loadBar != -1 && (lineCount % 10) == 0) {
+					loadingBar(loadBar, ((double)lineCount / (double)totalLines) * 100);
+				}
+			}
+			load.close();
+			if (loadBar != -1) {
+				terminateLoadingBar(loadBar);
+			}
+		}
+		string cleanLine;
+		bool tabSpace;
+		for (unsigned a = 0; a < rawCode.lines.size(); a++) {
+			line = rawCode.lines[a];
+			cleanLine = "";
+			tabSpace = true;
+			for (unsigned b = 0; b < line.size(); b++) {
+				if (tabSpace == true && line[b] != ' ') {
+					tabSpace = false;
+				}
+				if (tabSpace == false) {
+					cleanLine = cleanLine + line[b];
+				}
+			}
+			rawCode.lines[a] = cleanLine;
+
+		}
+		menuHierarchy newHierarchy;
+		menuPage newPage;
+		menuList newList;
+		int currentLevel = 0;
+		string currentLine = "";
+		string codeLine = "";
+		for (unsigned a = 0; a < rawCode.lines.size(); a++) {
+			currentLine = rawCode.lines[a];
+			codeLine = "";
+			if (currentLine[0] == '[') {
+				for (unsigned b = 1; b < currentLine.size() && currentLine[b] != ']'; b++) {
+					codeLine = codeLine + currentLine[b];
+				}
+				if (currentLevel == 0) {
+				}
+				if (currentLevel == 1) {
+				}
+				if (currentLevel == 2) {
+				}
+			}
+			if (currentLine[currentLine.size() - 1] == '{') {
+				if (currentLevel == 0) {
+					newHierarchy.name = codeLine;
+				}
+				if (currentLevel == 1) {
+					newPage.lists.clear();
+					newPage.name = codeLine;
+				}
+				if (currentLevel == 2) {
+					newList.items.clear();
+					newList.name = codeLine;
+				}
+				currentLevel++;
+			}
+			if (currentLine[currentLine.size() - 1] == '}') {
+				currentLevel--;
+				if (currentLevel == 0) {
+				}
+				if (currentLevel == 1) {
+					newHierarchy.pages.push_back(newPage);
+				}
+				if (currentLevel == 2) {
+					newPage.lists.push_back(newList);
+				}
+			}
+			if (currentLine[0] != '[') {
+				newList.items.push_back(currentLine);
+			}
+		}
+		return(newHierarchy);
+	}
+	void displayMenu(menuHierarchy menu, int currentPage, int currentList, int currentItem) {
+		cclearWindow();
+		string v, h, i, line;
+		char vc, hc, ic;
+		stringstream vss, hss, iss;
+		//vc = char(179);
+    //hc = char(196);
+		//ic = char(193);
+    vc = '|';
+    hc = '-';
+    ic = '+';
+		vss << vc;
+		vss >> v;
+		hss << hc;
+		hss >> h;
+		iss << ic;
+		iss >> i;
+		int sizeX, sizeY;
+		sizeX = windows[currentWindowPointer].sizeX - 2;
+		sizeY = windows[currentWindowPointer].sizeY - 2;
+		int pageWidth, listWidth;
+		int pagesDisplayed = menu.pages.size(), listsDisplayed = menu.pages[currentPage].lists.size(), maxItemsDisplayed = windows[currentWindowPointer].sizeY - 5;
+		int x, y, yn;
+		pageWidth = sizeX / menu.pages.size();
+		if (pageWidth < (sizeX - 4) / 5) {
+			pageWidth = (sizeX - 3) / 4;
+			pagesDisplayed = 4;
+		}
+		for (int a = 0; a < pageWidth - 1; a++) {
+			line = line + h;
+		}
+		listWidth = sizeX / menu.pages[currentPage].lists.size();
+		if (listWidth < sizeX / 9) {
+			listWidth = sizeX / 8;
+			listsDisplayed = 8;
+		}
+
+		while (currentPage >= pagesDisplayed + firstPage - 1 && pagesDisplayed + firstPage < menu.pages.size()) {
+			firstPage++;
+		}
+		while (currentPage <= firstPage && firstPage > 0) {
+			firstPage--;
+		}
+		while (currentList >= listsDisplayed + firstList - 1 && listsDisplayed + firstList < menu.pages[currentPage].lists.size()) {
+			firstList++;
+		}
+		while (currentList <= firstList && firstList > 0) {
+			firstList--;
+		}
+		while (currentItem >= maxItemsDisplayed + firstItem - 1 && maxItemsDisplayed + firstItem < menu.pages[currentPage].lists[currentList].items.size()) {
+			firstItem++;
+		}
+		while (currentItem <= firstItem && firstItem > 0) {
+			firstItem--;
+		}
+
+		x = 1;
+		y = 1;
+		for (int a = firstPage; a < pagesDisplayed + firstPage; a++) {
+			cmprint(x + findTextStart(menu.pages[a].name, pageWidth), y, menu.pages[a].name);
+			if (currentPage != a) {
+				cmprint(x + 1, y + 1, line);
+			}
+			x = x + pageWidth;
+			if (a != pagesDisplayed - 1) {
+				cmprint(x, y, v);
+				cmprint(x, y + 1, i);
+			}
+		}
+		x = 0;
+		y = y + 2;
+		for (int a = firstList; a < listsDisplayed + firstList; a++) {
+			cmprint(x + findTextStart("<" + menu.pages[currentPage].lists[a].name + ">", listWidth), y, "<" + menu.pages[currentPage].lists[a].name + ">");
+			yn = y + 1;
+			for (int b = firstItem; b < maxItemsDisplayed + firstItem && b < menu.pages[currentPage].lists[a].items.size(); b++) {
+				if (a == currentList && b == currentItem) {
+					cmprint(x + findTextStart(">" + menu.pages[currentPage].lists[a].items[b] + "<", listWidth), yn, ">" + menu.pages[currentPage].lists[a].items[b] + "<");
+				}
+				else {
+					cmprint(x + findTextStart(menu.pages[currentPage].lists[a].items[b], listWidth), yn, menu.pages[currentPage].lists[a].items[b]);
+				}
+				yn++;
+			}
+			x = x + listWidth;
+		}
+		update();
+	}
+	int findTextStart(string str, int space) {
+		space = space / 2;
+		int strSize = str.size();
+		strSize = strSize / 2;
+		int strStart = space - strSize;
+		return(strStart);
+	}
+	/*>>>>>-----DISPLAY-----<<<<<*/
+	/*>>>>>-----Loading Bars-----<<<<<*/
+	int initializeLoadingBar(string process) {
+		loadingBarPointers.push_back(windows.size());
+		createWindow(process, (windows[0].sizeX / 2) - (windows[0].sizeX / 4), (windows[0].sizeY / 2) - 1, (windows[0].sizeX / 2), 3, true, true);
+		return(loadingBarPointers.size() - 1);
+	}
+	void loadingBar(int index, double percent) {
+		char block = char(219);
+		int loadingBarPointer = loadingBarPointers[index];
+		int size = windows[loadingBarPointer].sizeX - 2;
+		double blockWorth = (double)100 / (double)size;
+		clearWindow(loadingBarPointer);
+		string bar = "";
+		while (percent > blockWorth) {
+			bar = bar + block;
+			percent = percent - blockWorth;
+		}
+		print(loadingBarPointer, bar);
+	}
+	void terminateLoadingBar(int index) {
+		terminateWindow(loadingBarPointers[index]);
+		loadingBarPointers.erase(loadingBarPointers.begin() + index);
+	}
+	/*=====>>>>>-----Input Funcitons-----<<<<<=====*/
+	/*=====>>>>>-----System Funcitons-----<<<<<=====*/
 };
