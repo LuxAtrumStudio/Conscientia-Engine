@@ -20,72 +20,85 @@ struct menuHierarchy {
 namespace CONSCIENTIA {
 	/*=====>>>>>-----CORE FUNCTIONS-----<<<<<=====*/
 	/*=====>>>>>-----Initilization-----<<<<<=====*/
-	void initializeConscientia();
-	void advancedInit(bool cursor, bool echo, bool raw);
+	void InitializeConscientia();
+	void AdvancedInit(bool cursor, bool echo, bool raw);
 	/*>>>>>-----SETTINGS-----<<<<<*/
-	void setAutoRefresh(bool setting);
+	void SetAutoRefresh(bool setting);
 	/*=====>>>>>-----Run Time-----<<<<<=====*/
 	/*>>>>>-----WINDOW-----<<<<<*/
 	/*>>>>>-----Initilization-----<<<<<*/
-	void createWindow(string name, int posX, int posY, int sizeX, int sizeY, bool border, bool title);
+	void GenorateWindow(string name, int posX, int posY, int sizeX, int sizeY, bool border, bool title);
 	/*>>>>>-----Management-----<<<<<*/
-	void clearAllWindows();
-	int findWindowPointer(string name);
+	void ClearAllWindows();
+	int FindWindowPointer(string name);
 	/*-----POINTER-----*/
-	void setBorder(int pointer, bool setting);
-	void clearWindow(int pointer);
-	void setWindowTitle(int pointer, bool setting);
-	void setCurrentWindow(int pointer);
+	void SetBorder(int pointer, bool setting);
+	void ClearWindow(int pointer);
+	void SetWindowTitle(int pointer, bool setting);
+	void SetCurrentWindow(int pointer);
 	/*-----CURRENT-----*/
-	void csetBorder(bool setting);
-	void cclearWindow();
-	void csetWindowTitle(bool setting);
+	void CsetBorder(bool setting);
+	void CclearWindow();
+	void CsetWindowTitle(bool setting);
 	/*-----FIND-----*/
-	void fsetBorder(string name, bool setting);
-	void fclearWindow(string name);
-	void fsetWindowTitle(string name, bool setting);
-	void fsetCurrentWindow(string name);
+	void FsetBorder(string name, bool setting);
+	void FclearWindow(string name);
+	void FsetWindowTitle(string name, bool setting);
+	void FsetCurrentWindow(string name);
 	/*-----WINDOWS-----*/
-	void drawBorder(int pointer);
-	void drawTitle(int pointer);
+	void DrawBorder(int pointer);
+	void DrawTitle(int pointer);
 	/*>>>>>-----Termination-----<<<<<*/
-	void terminateAllWindows();
-	void terminateWindow(int pointer);
+	void TerminateAllWindows();
+	void TerminateWindow(int pointer);
 	/*>>>>>-----USER INTERFACE-----<<<<<*/
 	/*>>>>>-----Input-----<<<<<*/
-	char gchar();
-	int gint();
-	int cint();
-	string cstr();
-	float gfloat();
+	char Gchar();
+	int Gint();
+	int Cint();
+	string Cstr();
+	float Gfloat();
 	/*>>>>>-----Output-----<<<<<*/
 	/*-----POINTER-----*/
-	void print(int pointer, string str);
-	void mprint(int pointer, int x, int y, string str);
+	void Print(int pointer, string str);
+	void Mprint(int pointer, int x, int y, string str);
 	/*-----CURRENT-----*/
-	void cprint(string str);
-	void cmprint(int x, int y, string str);
+	void Cprint(string str);
+	void Cmprint(int x, int y, string str);
 	/*-----FIND-----*/
-	void fprint(string name, string str);
-	void fmprint(string name, int x, int y, string str);
+	void Fprint(string name, string str);
+	void Fmprint(string name, int x, int y, string str);
 	/*>>>>>-----SYSTEM-----<<<<<*/
 	/*>>>>>-----Update-----<<<<<*/
-	void update();
+	void Update();
+	/*>>>>>-----Console-----<<<<<*/
+	void SetConsoleTitle(string title);
 	/*=====>>>>>-----Termination-----<<<<<=====*/
-	void terminateConscientia();
+	void TerminateConscientia();
 	/*=====>>>>>-----ADVANCED FUNCITONS-----<<<<<=====*/
 	/*=====>>>>>-----Output Funcitons-----<<<<<=====*/
 	/*>>>>>-----INTERACTIVE-----<<<<<*/
 	/*>>>>>-----Menu-----<<<<<*/
-	string menu(string menuFileDirectory, int posX, int posY, int sizeX, int sizeY);
-	menuHierarchy loadMenuHierarchy(string menuFileDirectory);
-	void displayMenu(menuHierarchy menu, int currentPage, int currentList, int currentItem);
-	int findTextStart(string str, int space);
+	string Menu(string menuFileDirectory, int posX, int posY, int sizeX, int sizeY);
+	menuHierarchy LoadMenuHierarchy(string menuFileDirectory);
+	void DisplayMenu(menuHierarchy menu, int currentPage, int currentList, int currentItem);
+	int FindTextStart(string str, int space);
 	/*>>>>>-----DISPLAY-----<<<<<*/
 	/*>>>>>-----Loading Bars-----<<<<<*/
-	int initializeLoadingBar(string process);
-	void loadingBar(int index, double percent);
-	void terminateLoadingBar(int index);
+	int InitializeLoadingBar(string process);
+	void LoadingBar(int index, double percent);
+	void TerminateLoadingBar(int index);
 	/*=====>>>>>-----Input Funcitons-----<<<<<=====*/
 	/*=====>>>>>-----System Funcitons-----<<<<<=====*/
+	bool FullStartUp();
+}
+
+namespace LOGGING {
+	void InitializeLogging();
+	void LogError(string log, string location);
+	void LogWarning(string log, string location);
+	void LogSuccess(string log, string location);
+	void LogData(string log, string location);
+	void Log(int code);
+	void TerminateLogging();
 }
