@@ -3,8 +3,7 @@
 using namespace std;
 
 int main() {
-	int barPointer;
-	CONSCIENTIA::initializeConscientia();
-	CONSCIENTIA::terminateConscientia();
+	CONSCIENTIA::InitializeConscientia();
+	CONSCIENTIA::TerminateConscientia();
 	return(1);
 }

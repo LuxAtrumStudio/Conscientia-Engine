@@ -395,7 +395,7 @@ namespace CONSCIENTIA {
 		loadBuffer = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE, 0, NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
 	}
 	/*>>>>>-----Console-----<<<<<*/
-	void SetConsoleMenu(string title) {
+	void SetConsoleTitle(string title) {
 		SetConsoleTitle(title.c_str());
 	}
 	/*=====>>>>>-----Termination-----<<<<<=====*/
@@ -689,10 +689,11 @@ namespace CONSCIENTIA {
 	}
 	/*=====>>>>>-----Input Funcitons-----<<<<<=====*/
 	/*=====>>>>>-----System Funcitons-----<<<<<=====*/
-	bool FullStartUp() {
+	bool FullStartUp(bool border, bool title) {
 		InitializeConscientia();
 		LOGGING::InitializeLogging();
 		GenorateWindow("Main", 0, 0, windows[0].sizeX - 2, windows[0].sizeY - 2, border, title);
+		return(true);
 	}
 }
 

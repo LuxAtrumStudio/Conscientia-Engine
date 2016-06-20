@@ -90,7 +90,7 @@ namespace CONSCIENTIA {
 	void TerminateLoadingBar(int index);
 	/*=====>>>>>-----Input Funcitons-----<<<<<=====*/
 	/*=====>>>>>-----System Funcitons-----<<<<<=====*/
-	bool FullStartUp();
+	bool FullStartUp(bool border, bool title);
 }
 
 namespace LOGGING {
