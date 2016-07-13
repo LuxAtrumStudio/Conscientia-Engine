@@ -36,15 +36,18 @@ namespace CONSCIENTIA {
 	void ClearWindow(int pointer);
 	void SetWindowTitle(int pointer, bool setting);
 	void SetCurrentWindow(int pointer);
+	void GetWindowSize(int pointer, int& x, int& y);
 	/*-----CURRENT-----*/
-	void CsetBorder(bool setting);
-	void CclearWindow();
-	void CsetWindowTitle(bool setting);
+	void CSetBorder(bool setting);
+	void CClearWindow();
+	void CSetWindowTitle(bool setting);
+	void CGetWindowSize(int& x, int& y);
 	/*-----FIND-----*/
-	void FsetBorder(string name, bool setting);
-	void FclearWindow(string name);
-	void FsetWindowTitle(string name, bool setting);
-	void FsetCurrentWindow(string name);
+	void FSetBorder(string name, bool setting);
+	void FClearWindow(string name);
+	void FSetWindowTitle(string name, bool setting);
+	void FSetCurrentWindow(string name);
+	void FGetWindowSize(string name, int& x, int& y);
 	/*-----WINDOWS-----*/
 	void DrawBorder(int pointer);
 	void DrawTitle(int pointer);
@@ -61,18 +64,18 @@ namespace CONSCIENTIA {
 	/*>>>>>-----Output-----<<<<<*/
 	/*-----POINTER-----*/
 	void Print(int pointer, string str);
-	void Mprint(int pointer, int x, int y, string str);
+	void MPrint(int pointer, int x, int y, string str);
 	/*-----CURRENT-----*/
-	void Cprint(string str);
-	void Cmprint(int x, int y, string str);
+	void CPrint(string str);
+	void CMPrint(int x, int y, string str);
 	/*-----FIND-----*/
-	void Fprint(string name, string str);
-	void Fmprint(string name, int x, int y, string str);
+	void FPrint(string name, string str);
+	void FMPrint(string name, int x, int y, string str);
 	/*>>>>>-----SYSTEM-----<<<<<*/
 	/*>>>>>-----Update-----<<<<<*/
 	void Update();
 	/*>>>>>-----Console-----<<<<<*/
-	void SetConsoleTitle(string title);
+	void SetConsoleName(string title);
 	/*=====>>>>>-----Termination-----<<<<<=====*/
 	void TerminateConscientia();
 	/*=====>>>>>-----ADVANCED FUNCITONS-----<<<<<=====*/
@@ -91,14 +94,4 @@ namespace CONSCIENTIA {
 	/*=====>>>>>-----Input Funcitons-----<<<<<=====*/
 	/*=====>>>>>-----System Funcitons-----<<<<<=====*/
 	bool FullStartUp(bool border, bool title);
-}
-
-namespace LOGGING {
-	void InitializeLogging();
-	void LogError(string log, string location);
-	void LogWarning(string log, string location);
-	void LogSuccess(string log, string location);
-	void LogData(string log, string location);
-	void Log(int code);
-	void TerminateLogging();
 }

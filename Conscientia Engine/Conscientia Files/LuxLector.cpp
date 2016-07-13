@@ -1,0 +1,10 @@
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <Windows.h>
+#include <vector>
+#include <fstream>
+#include <ctime>
+#include <conio.h>
+#include "LuxLector.h"
+#include "Logging.h"

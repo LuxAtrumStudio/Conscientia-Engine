@@ -13,18 +13,53 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Conscientia Files">
+      <UniqueIdentifier>{da064733-2f35-434c-97de-7cc0bf12d701}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Conscientia Files\Source Files">
+      <UniqueIdentifier>{62e4b497-7e70-4797-98d6-516061a3ea4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Conscientia Files\Header FIles">
+      <UniqueIdentifier>{464725c6-a064-4160-866f-eb7476d07bc1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Conscientia.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Conscientia Files\Concero.cpp">
+      <Filter>Conscientia Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Conscientia Files\Conscientia.cpp">
+      <Filter>Conscientia Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Conscientia Files\Logging.cpp">
+      <Filter>Conscientia Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Conscientia Files\LuxLector.cpp">
+      <Filter>Conscientia Files\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Conscientia.h">
+    <ClInclude Include="Conscientia Files\Concero.h">
+      <Filter>Conscientia Files\Header FIles</Filter>
+    </ClInclude>
+    <ClInclude Include="Conscientia Files\Conscientia.h">
+      <Filter>Conscientia Files\Header FIles</Filter>
+    </ClInclude>
+    <ClInclude Include="Conscientia Files\Logging.h">
+      <Filter>Conscientia Files\Header FIles</Filter>
+    </ClInclude>
+    <ClInclude Include="Conscientia Files\LuxLector.h">
+      <Filter>Conscientia Files\Header FIles</Filter>
+    </ClInclude>
+    <ClInclude Include="Conscientia Files\Conscientia Headers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Conscientia Files\GetPage.py">
+      <Filter>Conscientia Files\Source Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
