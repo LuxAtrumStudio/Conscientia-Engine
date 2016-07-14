@@ -83,7 +83,7 @@ namespace CONSCIENTIA {
 	/*>>>>>-----INTERACTIVE-----<<<<<*/
 	/*>>>>>-----Menu-----<<<<<*/
 	string Menu(string menuFileDirectory, int posX, int posY, int sizeX, int sizeY);
-	menuHierarchy LoadMenuHierarchy(string menuFileDirectory);
+	menuHierarchy LoadHierarchyFile(string fileDirectory);
 	void DisplayMenu(menuHierarchy menu, int currentPage, int currentList, int currentItem);
 	int FindTextStart(string str, int space);
 	/*>>>>>-----DISPLAY-----<<<<<*/

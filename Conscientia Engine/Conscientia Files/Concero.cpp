@@ -6,9 +6,7 @@
 #include <fstream>
 #include <ctime>
 #include <conio.h>
-#include "Concero.h"
-#include "Logging.h"
-#include "Conscientia.h"
+#include "Conscientia Headers.h"
 
 int level = 0;
 unsigned int index = 1;

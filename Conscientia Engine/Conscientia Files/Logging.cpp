@@ -6,7 +6,7 @@
 #include <fstream>
 #include <ctime>
 #include <conio.h>
-#include "Logging.h"
+#include "Conscientia Headers.h"
 using namespace std;
 ofstream logFile;
 bool logOpen = false;

@@ -36,9 +36,6 @@
     <ClCompile Include="Conscientia Files\Logging.cpp">
       <Filter>Conscientia Files\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Conscientia Files\LuxLector.cpp">
-      <Filter>Conscientia Files\Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Conscientia Files\Concero.h">
@@ -48,9 +45,6 @@
       <Filter>Conscientia Files\Header FIles</Filter>
     </ClInclude>
     <ClInclude Include="Conscientia Files\Logging.h">
-      <Filter>Conscientia Files\Header FIles</Filter>
-    </ClInclude>
-    <ClInclude Include="Conscientia Files\LuxLector.h">
       <Filter>Conscientia Files\Header FIles</Filter>
     </ClInclude>
     <ClInclude Include="Conscientia Files\Conscientia Headers.h">

@@ -6,8 +6,7 @@
 #include <fstream>
 #include <ctime>
 #include <conio.h>
-#include "Conscientia.h"
-#include "Logging.h"
+#include "Conscientia Headers.h"
 /*=====>>>>>-----BASIC DATA-----<<<<<=====*/
 /*=====>>>>>-----Global-----<<<<<=====*/
 struct window {
@@ -24,11 +23,12 @@ int currentBuffer = 1;
 HANDLE loadBuffer, displayBuffer;
 _CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
 
-/*=====>>>>>-----ADVANCED DATA-----<<<<<=====*/
-/*=====>>>>>-----Global-----<<<<<=====*/
 struct luxCode {
 	vector<string> lines;
 };
+
+/*=====>>>>>-----ADVANCED DATA-----<<<<<=====*/
+/*=====>>>>>-----Global-----<<<<<=====*/
 /*>>>>>-----FUNCTIONS-----<<<<<*/
 /*>>>>>-----Menu-----<<<<<*/
 int firstPage = 0, firstList = 0, firstItem = 0;
@@ -422,7 +422,7 @@ string CONSCIENTIA::Menu(string menuFileDirectory, int posX, int posY, int sizeX
 	bool run = true, update = true;
 	int in = -1;
 	menuHierarchy menuStruct;
-	menuStruct = LoadMenuHierarchy(menuFileDirectory);
+	menuStruct = LoadHierarchyFile(menuFileDirectory);
 	int windowPointer = windows.size();
 	int pageWidth, listWidth;
 	int currentPage = 0, currentList = 0, currentItem = 0;
@@ -491,17 +491,18 @@ string CONSCIENTIA::Menu(string menuFileDirectory, int posX, int posY, int sizeX
 	}
 	return("");
 }
-menuHierarchy CONSCIENTIA::LoadMenuHierarchy(string menuFileDirectory) {
+menuHierarchy CONSCIENTIA::LoadHierarchyFile(string fileDirectory)
+{
 	string line;
 	luxCode rawCode;
 	int lineCount = 0, totalLines;
 	int loadBar = -1;
-	ifstream load(menuFileDirectory.c_str());
+	ifstream load(fileDirectory.c_str());
 	if (load.is_open()) {
 		load >> lineCount;
 		totalLines = lineCount;
 		if (lineCount >= 50) {
-			loadBar = InitializeLoadingBar("Loading Menu");
+			loadBar = CONSCIENTIA::InitializeLoadingBar("Loading Menu");
 		}
 		lineCount = 0;
 		getline(load, line);
@@ -509,12 +510,12 @@ menuHierarchy CONSCIENTIA::LoadMenuHierarchy(string menuFileDirectory) {
 			rawCode.lines.push_back(line);
 			lineCount++;
 			if (loadBar != -1 && (lineCount % 10) == 0) {
-				LoadingBar(loadBar, ((double)lineCount / (double)totalLines) * 100);
+				CONSCIENTIA::LoadingBar(loadBar, ((double)lineCount / (double)totalLines) * 100);
 			}
 		}
 		load.close();
 		if (loadBar != -1) {
-			TerminateLoadingBar(loadBar);
+			CONSCIENTIA::TerminateLoadingBar(loadBar);
 		}
 	}
 	string cleanLine;
